@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine — Selamat Datang</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- CSS kamu -->
+  <link rel="stylesheet" href="style/styling.css">
+
+  <style>
+    /* Hanya style khusus halaman welcome yang belum ada di styling.css */
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-background);
+      position: relative;
+      overflow: hidden;
+    }
+
+    *{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+    /* Background image */
+    .welcome-bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      z-index: 0;
+    }
+
+    /* Wrapper utama */
+    .welcome-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 448px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 64px 28px 48px;
+    }
+
+    /* Logo */
+    .welcome-logo {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin-top: -20px;
+  margin-bottom: 1px;
+}
+.welcome-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.welcome-desc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-align: center;
+  max-width: 320px;
+  margin-bottom: 40px;
+}
+
+    /* Card input — glassmorphism */
+    .welcome-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-2xl);
+     padding: 32px 24px 24px;
+      box-shadow:
+        0 8px 32px rgba(13, 43, 30, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Label floating nomor meja */
+    .meja-field {
+      position: relative;
+      margin-bottom: -10px;
+      width: 100%;
+    }
+
+    .meja-label {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: var(--color-primary);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 0 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color:#ffff;
+      line-height: 20px;
+      border-radius: var(--radius-full);
+      z-index: 1;
+    }
+
+.meja-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+    .meja-input-wrap:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.15);
+    }
+
+.meja-input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--color-on-surface-variant);
+  z-index: 2;
+}
+
+.meja-input-icon .material-symbols-outlined {
+  font-size: 20px;
+}
+
+
+  .meja-input {
+  width: 100%;
+  height: 62px;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  background: transparent;
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+
+  text-align: center;
+  letter-spacing: 0.08em;
+
+  color: var(--color-on-surface);
+  caret-color: var(--color-primary);
+
+  padding: 0;
+}
+
+.meja-input::placeholder {
+  color: rgba(0,0,0,.35);
+  font-weight: 800;
+}
+
+    .meja-input::-webkit-inner-spin-button,
+    .meja-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .meja-input[type=number] { -moz-appearance: textfield; }
+
+    .meja-input:not(:placeholder-shown) {
+      color: var(--color-on-surface);
+    }
+
+    /* Error */
+    .error-msg {
+      font-size: 12px;
+      color: var(--color-error);
+      font-weight: 600;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      min-height: 16px;
+      margin-top: 10px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      width: 100%;
+    }
+    .error-msg.visible { opacity: 1; }
+
+    /* Tombol Mulai Memesan */
+    .btn-mulai {
+      width: 100%;
+      height: 56px;
+        background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary) 50%,
+    var(--color-primary-mid) 100%
+  );
+      color: #ffff;
+      border: none;
+      border-radius: var(--radius-xl);
+      font-family: var(--font-base);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(13, 43, 30, 0.45);
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-mulai:hover {
+        background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary) 50%,
+    var(--color-primary-mid) 100%
+  );
+      box-shadow: 0 8px 28px rgba(13, 43, 30, 0.55);
+      transform: translateY(-1px);
+    }
+
+    .btn-mulai:active {
+      transform: scale(0.97);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-mulai .material-symbols-outlined {
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-mulai:hover .arrow-icon {
+      transform: translateX(4px);
+    }
+
+    .btn-mulai.loading .btn-text { display: none; }
+    .btn-mulai.loading .btn-spinner { display: flex !important; }
+    .btn-spinner {
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Help text */
+    .welcome-help {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--color-primary);
+    }
+
+    .welcome-help .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--color-primary);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background image — ganti src sesuai path file kamu -->
+  <img class="welcome-bg" src="assets/background.png" alt="" aria-hidden="true">
+
+  <div class="welcome-wrapper">
+
+    <!-- Logo — ganti src sesuai path logo kamu -->
+    <img
+      class="welcome-logo"
+      src="assets/logo-teja.svg"
+      alt="Logo"
+    >
+
+    <!-- Heading -->
+    <h1 class="welcome-title">Selamat Datang</h1>
+    <p class="welcome-desc">
+  Pesan makanan dan minuman favorit Anda langsung dari meja tanpa perlu antre di kasir.
+</p>
+
+    <!-- Card -->
+    <div class="welcome-card">
+
+      <!-- Input Nomor Meja -->
+      <div class="meja-field">
+        <span class="meja-label">Nomor Meja</span>
+        <div class="meja-input-wrap">
+          <div class="meja-input-icon">
+            <span class="material-symbols-outlined">tag</span>
+          </div>
+          <input
+            id="nomor-meja"
+            class="meja-input"
+            type="number"
+            min="1"
+            max="99"
+            placeholder="00"
+            inputmode="numeric"
+            autocomplete="off"
+            aria-label="Masukkan nomor meja"
+          >
+        </div>
+      </div>
+
+      <!-- Error -->
+      <p class="error-msg" id="error-msg" role="alert"></p>
+
+      <!-- Tombol -->
+      <button class="btn-mulai" id="btn-mulai" type="button">
+        <span class="btn-text" style="display:flex;align-items:center;gap:10px;">
+          Mulai Pesanan
+          <span class="material-symbols-outlined arrow-icon">arrow_forward</span>
+        </span>
+        <span class="btn-spinner">
+          <span class="material-symbols-outlined animate-spin" style="font-size:20px">progress_activity</span>
+        </span>
+      </button>
+    <!-- Help -->
+    <p class="welcome-help">
+      <span class="material-symbols-outlined">support_agent</span>
+      Butuh bantuan? Silakan panggil pelayan
+    </p>
+    </div>
+
+  </div>
+
+
+  <script>
+    const input  = document.getElementById('nomor-meja');
+    const btn    = document.getElementById('btn-mulai');
+    const errMsg = document.getElementById('error-msg');
+
+    function isValid() {
+      const val = parseInt(input.value, 10);
+      return input.value.trim() !== '' && !isNaN(val) && val >= 1 && val <= 99;
+    }
+
+    function showError(msg) {
+      errMsg.textContent = msg;
+      errMsg.classList.add('visible');
+    }
+
+    function hideError() {
+      errMsg.classList.remove('visible');
+    }
+
+    input.addEventListener('input', () => {
+      if (isValid()) hideError();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') btn.click();
+    });
+
+    btn.addEventListener('click', () => {
+      if (!isValid()) {
+        showError('Masukkan nomor meja yang valid (1–99).');
+        input.focus();
+        return;
+      }
+
+      hideError();
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = 'index.html?meja=' + parseInt(input.value, 10);
+      }, 700);
+    });
+  </script>
+
+</body>
+</html>
