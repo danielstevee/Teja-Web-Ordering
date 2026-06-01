@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="style/styling.css">
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER — Top App Bar
+       ============================================================ -->
+  <header id="site-header">
+    <div class="header-inner">
+
+      <!-- Brand -->
+      <div class="header-brand">
+        <span class="material-symbols-outlined">coffee</span>
+        <h1>UrbanDine</h1>
+      </div>
+
+      <!-- Profile Button -->
+      <button class="btn-profile" aria-label="Profil saya">
+        <span class="material-symbols-outlined">account_circle</span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="page-container">
+
+
+    <!-- --------------------------------------------------------
+         SECTION 1 — Search Bar
+         -------------------------------------------------------- -->
+    <section id="section-search" class="section">
+      <div class="search-wrapper">
+
+        <!-- Icon -->
+        <div class="search-icon">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+
+        <!-- Input -->
+        <input
+          type="text"
+          placeholder="Cari kopi atau menu favoritmu..."
+          aria-label="Cari menu"
+        >
+
+      </div>
+    </section>
+
+
+    <!-- --------------------------------------------------------
+         SECTION 2 — Signature Coffee / Hero
+         -------------------------------------------------------- -->
+    <section id="section-hero" class="section">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <h2 class="text-headline-md text-on-surface">Signature Coffee</h2>
+        <a href="#">Lihat Semua</a>
+      </div>
+
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
+          alt="Velvet Iced Latte"
+        >
+
+        <!-- Overlay Content -->
+        <div class="hero-overlay">
+          <span class="badge-popular">MOST POPULAR</span>
+          <h3 class="hero-title">Velvet Iced Latte</h3>
+          <p class="hero-desc">Kopi premium dengan sentuhan vanilla artisan.</p>
+
+          <div class="hero-footer">
+            <span class="hero-price">Rp 32.000</span>
+            <button class="btn-add-hero btn-add">Tambah</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- --------------------------------------------------------
+         SECTION 3 — Category Chips
+         -------------------------------------------------------- -->
+    <section id="section-categories" class="hide-scrollbar">
+      <div class="chips-row" role="list">
+        <button class="chip chip--active"  role="listitem">Minuman</button>
+        <button class="chip chip--default" role="listitem">Kopi Signature</button>
+        <button class="chip chip--default" role="listitem">Promo</button>
+        <button class="chip chip--default" role="listitem">Makanan Utama</button>
+        <button class="chip chip--default" role="listitem">Camilan</button>
+      </div>
+    </section>
+
+
+    <!-- --------------------------------------------------------
+         SECTION 4 — Minuman Populer
+         -------------------------------------------------------- -->
+    <section id="section-drinks" class="section">
+
+      <h2 class="text-headline-md text-on-surface" style="margin-bottom:16px">Minuman Populer</h2>
+
+      <div class="drinks-list">
+
+        <!-- Card 1 — Matcha Premium Latte -->
+        <article class="drink-card">
+          <img
+            class="drink-card__thumbnail"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E"
+            alt="Matcha Premium Latte"
+          >
+          <div class="drink-card__info">
+            <p class="drink-card__name">Matcha Premium Latte</p>
+            <p class="drink-card__price">Rp 38.000</p>
+          </div>
+          <button class="drink-card__btn btn-add" aria-label="Tambah Matcha Premium Latte">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </article>
+
+        <!-- Card 2 — Americano Double Shot -->
+        <article class="drink-card">
+          <div class="drink-card__thumbnail--placeholder">
+            <span class="material-symbols-outlined">local_drink</span>
+          </div>
+          <div class="drink-card__info">
+            <p class="drink-card__name">Americano Double Shot</p>
+            <p class="drink-card__price">Rp 25.000</p>
+          </div>
+          <button class="drink-card__btn btn-add" aria-label="Tambah Americano Double Shot">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- --------------------------------------------------------
+         SECTION 5 — Makanan Utama
+         -------------------------------------------------------- -->
+    <section id="section-food" class="section">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <h2 class="text-headline-md text-on-surface">Makanan Utama</h2>
+        <a href="#">Lihat Semua</a>
+      </div>
+
+      <!-- 2-Column Grid -->
+      <div class="food-grid">
+
+        <!-- Card 1 — Beef Burger Wagyu -->
+        <article class="food-card">
+          <div class="food-card__image-wrap">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLwguhTb2ICpeAjNI6x17NGsuypwi0yRSO6LZZVygOGYZxP9Jm-toblYjW2UGGD-qF3pgUTIps0n51amK4zDGoS7M5O7EMRwBPR_wx9F-6k4c0fUPmLHacbqbUnhVJDJMTW8mWc4BqL5GAN6uhOieG82FgcvR7ny7m_HQ2Y18tbxdZKySx_NcyBOJd0nmiBW6nKfuvj7Jfw2P52ASuRoEelD4SWjJtUGVnXWJ7GBL0fROjnVYyeBztuYQ-ur3eiLaE6XC3f99iru4"
+              alt="Beef Burger Wagyu"
+            >
+          </div>
+          <div class="food-card__body">
+            <p class="food-card__name">Beef Burger Wagyu</p>
+            <p class="food-card__price">Rp 75.000</p>
+            <button class="food-card__btn btn-add">Tambah</button>
+          </div>
+        </article>
+
+        <!-- Card 2 — Salad Ayam Bakar -->
+        <article class="food-card">
+          <div class="food-card__image-wrap">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNQEFHD3N5T8z4wp7wDciYLPW48Cghdgv89wyUN1e9yh1ZVPYTrq__TLJofD27NeCUOwLVLiS2VAmsYjzBKLd-2S1sO234YImQKSwlpixG5C009gAc6qwoh7oC_muucfiJFmKx7beWTH03Fd_nZRYPoJp0oyKdUaUdoqDU4qYHmpudu6rSvklz5SlJhK3Cm6RQiDmLQntWvLehEXVxfKe8uGuSBQ81Qfnuxcsok2zDrUPg4TJucfm8h85QIlqt22LvEJ6EkAFuLIg"
+              alt="Salad Ayam Bakar"
+            >
+          </div>
+          <div class="food-card__body">
+            <p class="food-card__name">Salad Ayam Bakar</p>
+            <p class="food-card__price">Rp 45.000</p>
+            <button class="food-card__btn btn-add">Tambah</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- --------------------------------------------------------
+         SECTION 6 — Camilan (Bento Grid)
+         -------------------------------------------------------- -->
+    <section id="section-snacks" class="section">
+
+      <h2 class="text-headline-md text-on-surface" style="margin-bottom:16px">Camilan</h2>
+
+      <!-- Bento Grid -->
+      <div class="bento-grid">
+
+        <!-- Item Large — Truffle Fries -->
+        <article class="bento-item bento-item--large">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN8XPN0gGtt029uyFNZQpBtgXei-ZyDeCb6Hp_WV_38hmr-CoiZPlJoOM-CBaSm2AvqxwjVXuXygKqTCMsYC-yNZw69C8dgsCxbWgO6VOqtJWbYLgi378LeJ2Ry0-fQVei3-O_8gUB0NINEl9PESmOKf-XBntuXZW0_DU5FMfjpqjfRFpSMWatiDiMgvbUBfdcAuUboYKUwGdkrprhQEE7jGo4vEA9JbRvU0Re1rDlWoDWbMQKGMgMatwVBGKu_xpK4JfX0Yv-Vlk"
+            alt="Truffle Fries"
+          >
+          <div class="bento-item__overlay">
+            <p class="bento-item__name">Truffle Fries</p>
+            <p class="bento-item__price">Rp 35k</p>
+          </div>
+        </article>
+
+        <!-- Item Small — Garlic Bread -->
+        <article class="bento-item bento-item--small">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD97FzkmaA4pK_vi2jNWr0OoSW_XCHj5vWC_Oyc_HpoJraDGJzoY9F-4E5dtmLh1MQC5vbtqf635ga9jnrhDl6NsF0bB6fgr02cWamVGlJislHEIXZ18qG3J-xGpv3KjgCFh6Ge1xYK-PK5_euZZc4xhmLMRytZ_U_b9NFCoCXxSQ9CjUDn0Ucfxncd-JHnRPg6T9f19Z78jUEJralh_0oVqbizcDrIrsZIUOZ_F72a3FFZ7GUaiiFCvk1tSPoX1TFacvp_OBiGWDA"
+            alt="Garlic Bread"
+          >
+          <div class="bento-item__overlay">
+            <p class="bento-item__name">Garlic Bread</p>
+            <p class="bento-item__price">Rp 28k</p>
+          </div>
+        </article>
+
+        <!-- Item Small — Spicy Wings -->
+        <article class="bento-item bento-item--small">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzZ43zd4lreg9T3vmd01wD4wHiwa4R0seqqk8Bcv26s9MNGiP_LF6M6EsGgk0QlXfkAMN1g5EhlcTV75PgKlAd4Ot9AYalyneqmA82MgkYyJfNFIG-mjdIC6yFaem6bR_uJLsvXAL6dIfd0vMovWCkc4UeAUr4Xs2sPyct-ZUk55QwMaiAWpa3OW41dm3et049KYMbxvV67Oiz3N-GwcVj-gfkBAymvBuHe5RBE0rernsrZb5-S4vt0YCRHiqsgiAiYomsccrspgA"
+            alt="Spicy Wings"
+          >
+          <div class="bento-item__overlay">
+            <p class="bento-item__name">Spicy Wings</p>
+            <p class="bento-item__price">Rp 42k</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+
+  </main>
+
+
+  <!-- ============================================================
+       FAB — Keranjang Belanja
+       ============================================================ -->
+  <div id="fab-cart">
+    <button class="fab-btn" aria-label="Lihat keranjang">
+
+      <!-- Left side: icon + label -->
+      <div class="fab-left">
+        <div class="fab-icon-wrap">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span class="fab-badge" aria-label="2 item">2</span>
+        </div>
+        <span class="fab-label">Lihat Keranjang</span>
+      </div>
+
+      <!-- Right side: total -->
+      <span class="fab-total">Rp 107.000</span>
+
+    </button>
+  </div>
+
+
+  <!-- ============================================================
+       BOTTOM NAVIGATION BAR
+       ============================================================ -->
+  <nav id="bottom-nav" aria-label="Navigasi utama">
+
+    <button class="nav-item nav-item--active" aria-current="page">
+      <span class="material-symbols-outlined">restaurant_menu</span>
+      <span class="nav-label">Menu</span>
+    </button>
+
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="nav-label">Orders</span>
+    </button>
+
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span class="nav-label">Cart</span>
+    </button>
+
+
+  </nav>
+
+
+  <!-- ============================================================
+       SCRIPTS — Micro-interactions
+       ============================================================ -->
+  <script>
+    /**
+     * "Tambah" button feedback animation
+     * Works on all buttons with class .btn-add
+     */
+    document.querySelectorAll('.btn-add').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const originalContent = this.innerHTML;
+        const originalClass    = this.className;
+
+        // Loading state
+        this.innerHTML  = '<span class="material-symbols-outlined animate-spin" style="font-size:18px">progress_activity</span>';
+        this.disabled   = true;
+
+        setTimeout(() => {
+          // Success state
+          this.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">check_circle</span>';
+          this.classList.add('btn-success');
+
+          setTimeout(() => {
+            // Restore original
+            this.innerHTML  = originalContent;
+            this.className  = originalClass;
+            this.disabled   = false;
+          }, 1500);
+        }, 600);
+      });
+    });
+
+
+    /**
+     * Search bar scale effect on focus / blur
+     */
+    const searchInput   = document.querySelector('#section-search input');
+    const searchWrapper = document.querySelector('#section-search .search-wrapper');
+
+    if (searchInput && searchWrapper) {
+      searchInput.addEventListener('focus', () => {
+        searchWrapper.classList.add('is-focused');
+      });
+      searchInput.addEventListener('blur', () => {
+        searchWrapper.classList.remove('is-focused');
+      });
+    }
+
+
+    /**
+     * Category chips — active state toggle
+     */
+    document.querySelectorAll('#section-categories .chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('#section-categories .chip').forEach(c => {
+          c.classList.remove('chip--active');
+          c.classList.add('chip--default');
+        });
+        this.classList.remove('chip--default');
+        this.classList.add('chip--active');
+      });
+    });
+  </script>
+
+</body>
+</html>

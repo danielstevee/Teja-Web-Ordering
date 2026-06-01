@@ -1,0 +1,1068 @@
+/* ============================================================
+   URBANDINE — styling.css
+   Palette: Dark Forest Green (Starbucks-inspired)
+   Struktur:
+   1. Import Font
+   2. CSS Variables (Design Tokens)
+   3. Reset & Base
+   4. Typography Utilities
+   5. Layout & Container
+   6. Header / TopAppBar
+   7. Search Bar
+   8. Signature Coffee / Hero Section
+   9. Category Chips
+   10. Minuman Populer
+   11. Makanan Utama
+   12. Camilan (Bento Grid)
+   13. FAB Keranjang
+   14. Bottom Navigation Bar
+   15. Animations & Micro-interactions
+   16. Scrollbar Utility
+   ============================================================ */
+
+
+/* ----------------------------------------------------------
+   1. IMPORT FONT
+   ---------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+
+/* ----------------------------------------------------------
+   2. CSS VARIABLES (Design Tokens)
+   ---------------------------------------------------------- */
+:root {
+  /* ── Core Brand Colors (Dark Forest Green) ── */
+  --color-primary:                  #1B3A2D;   /* deep forest green */
+  --color-primary-dark:             #0D2B1E;   /* darker forest */
+  --color-primary-mid:              #234D38;   /* mid tone */
+  --color-primary-light:            #2E6045;   /* lighter green */
+  --color-on-primary:               #FFFFFF;
+
+  --color-primary-container:        #E8F2EC;   /* very light green tint */
+  --color-on-primary-container:     #1B3A2D;
+
+  /* ── Accent ── */
+  --color-accent:                   #D4A96A;   /* warm gold/caramel */
+  --color-accent-light:             #F0D9B5;
+  --color-on-accent:                #1B3A2D;
+
+  /* ── Surface / Background ── */
+  --color-background:               #F5F0E8;   /* warm cream/off-white */
+  --color-surface:                  #FFFFFF;
+  --color-surface-warm:             #FAF7F2;   /* warm card bg */
+  --color-surface-dim:              #EDE8E0;
+  --color-surface-container-low:    #F7F4EE;
+  --color-surface-container:        #EFEBE3;
+  --color-surface-container-high:   #E5E0D6;
+  --color-surface-container-highest:#DAD4C8;
+  --color-surface-variant:          #CEC8BC;
+
+  /* ── Text ── */
+  --color-on-background:            #1A1A1A;
+  --color-on-surface:               #1A1A1A;
+  --color-on-surface-secondary:     #3D3D3D;
+  --color-on-surface-variant:       #6B6660;
+  --color-on-surface-muted:         #9A948E;
+
+  /* ── Status ── */
+  --color-error:                    #C0392B;
+  --color-on-error:                 #FFFFFF;
+  --color-error-container:          #FDECEA;
+
+  /* ── Outline ── */
+  --color-outline:                  #B8B2AA;
+  --color-outline-variant:          #DDD8D0;
+
+  /* ── Spacing ── */
+  --spacing-margin-mobile:  16px;
+  --spacing-gutter-sm:      12px;
+  --spacing-gutter-md:      20px;
+  --spacing-gutter-lg:      28px;
+
+  /* ── Border Radius ── */
+  --radius-xs:   6px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── Typography ── */
+  --font-display: 'Playfair Display', serif;
+  --font-base:    'DM Sans', sans-serif;
+
+  /* ── Shadows ── */
+  --shadow-xs:  0 1px 3px rgba(27,58,45,0.06);
+  --shadow-sm:  0 2px 8px rgba(27,58,45,0.10);
+  --shadow-md:  0 4px 16px rgba(27,58,45,0.14);
+  --shadow-lg:  0 8px 32px rgba(27,58,45,0.18);
+  --shadow-xl:  0 16px 48px rgba(27,58,45,0.22);
+
+  /* ── Z-index layers ── */
+  --z-header: 50;
+  --z-fab:    40;
+  --z-nav:    50;
+}
+
+
+/* ----------------------------------------------------------
+   3. RESET & BASE
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-base);
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Material Symbols icon style */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+
+
+/* ----------------------------------------------------------
+   4. TYPOGRAPHY UTILITIES
+   ---------------------------------------------------------- */
+.text-display-lg {
+  font-family: var(--font-display);
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.text-headline-xl {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.text-headline-lg {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-headline-md {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+.text-body-lg {
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 400;
+}
+
+.text-body-md {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+.text-label-lg {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.text-label-md {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+.text-label-sm {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Color helpers */
+.text-primary              { color: var(--color-primary); }
+.text-on-surface           { color: var(--color-on-surface); }
+.text-on-surface-variant   { color: var(--color-on-surface-variant); }
+.text-on-primary           { color: var(--color-on-primary); }
+.text-accent               { color: var(--color-accent); }
+.text-white                { color: #ffffff; }
+.text-white-80             { color: rgba(255, 255, 255, 0.80); }
+
+
+/* ----------------------------------------------------------
+   5. LAYOUT & CONTAINER
+   ---------------------------------------------------------- */
+.page-container {
+  max-width: 448px;
+  margin: 0 auto;
+  padding: 80px var(--spacing-margin-mobile) 160px;
+}
+
+.section {
+  margin-bottom: var(--spacing-gutter-lg);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.section-header a {
+  color: var(--color-primary-light);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-container);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.section-header a:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+
+/* ----------------------------------------------------------
+   6. HEADER / TOP APP BAR
+   ---------------------------------------------------------- */
+#site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: var(--z-header);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background-color: rgba(245, 240, 232, 0.92);
+  border-bottom: 1px solid var(--color-outline-variant);
+  box-shadow: 0 1px 0 rgba(27,58,45,0.06), 0 4px 16px rgba(27,58,45,0.06);
+}
+
+#site-header .header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-margin-mobile);
+  height: 64px;
+  max-width: 448px;
+  margin: 0 auto;
+}
+
+#site-header .header-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#site-header .header-brand .material-symbols-outlined {
+  color: var(--color-primary);
+  font-size: 26px;
+}
+
+#site-header .header-brand h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+#site-header .btn-profile {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  color: var(--color-primary);
+  background-color: var(--color-primary-container);
+}
+
+#site-header .btn-profile:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+#site-header .btn-profile:active {
+  transform: scale(0.92);
+}
+
+
+/* ----------------------------------------------------------
+   7. SEARCH BAR
+   ---------------------------------------------------------- */
+#section-search .search-wrapper {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+#section-search .search-icon {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  padding-left: 16px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: var(--color-on-surface-variant);
+}
+
+#section-search .search-icon .material-symbols-outlined {
+  font-size: 20px;
+}
+
+#section-search input {
+  width: 100%;
+  height: 48px;
+  padding-left: 48px;
+  padding-right: 16px;
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-outline-variant);
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--color-on-surface);
+  outline: none;
+  font-family: var(--font-base);
+  box-shadow: var(--shadow-xs);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#section-search input::placeholder {
+  color: var(--color-on-surface-muted);
+  font-weight: 400;
+}
+
+#section-search input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.10), var(--shadow-sm);
+}
+
+#section-search .search-wrapper.is-focused {
+  transform: scale(1.015);
+}
+
+
+/* ----------------------------------------------------------
+   8. SIGNATURE COFFEE / HERO SECTION
+   ---------------------------------------------------------- */
+#section-hero .hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  height: 220px;
+  box-shadow: var(--shadow-xl);
+  cursor: pointer;
+}
+
+#section-hero .hero-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#section-hero .hero-card:hover img {
+  transform: scale(1.06);
+}
+
+#section-hero .hero-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(13, 43, 30, 0.96) 0%,
+    rgba(27, 58, 45, 0.70) 45%,
+    rgba(27, 58, 45, 0.10) 100%
+  );
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+#section-hero .badge-popular {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(212, 169, 106, 0.20);
+  border: 1px solid rgba(212, 169, 106, 0.50);
+  color: var(--color-accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  margin-bottom: 10px;
+  width: fit-content;
+  backdrop-filter: blur(8px);
+}
+
+#section-hero .hero-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 33px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+#section-hero .hero-desc {
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+#section-hero .hero-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+#section-hero .hero-price {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-accent);
+  letter-spacing: -0.01em;
+}
+
+#section-hero .btn-add-hero {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 9px 20px;
+  border-radius: var(--radius-full);
+  transition: transform 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+#section-hero .btn-add-hero:hover {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+#section-hero .btn-add-hero:active {
+  transform: scale(0.94);
+}
+
+
+/* ----------------------------------------------------------
+   9. CATEGORY CHIPS
+   ---------------------------------------------------------- */
+#section-categories {
+  margin-left: calc(-1 * var(--spacing-margin-mobile));
+  margin-right: calc(-1 * var(--spacing-margin-mobile));
+  padding-left: var(--spacing-margin-mobile);
+  padding-right: var(--spacing-margin-mobile);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-gutter-lg);
+}
+
+#section-categories .chips-row {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  width: max-content;
+}
+
+.chip {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.1s ease;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+}
+
+.chip:active {
+  transform: scale(0.95);
+}
+
+.chip--active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 2px 10px rgba(27,58,45,0.30);
+}
+
+.chip--default {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface-variant);
+  border: 1.5px solid var(--color-outline-variant);
+}
+
+.chip--default:hover {
+  background-color: var(--color-primary-container);
+  color: var(--color-primary);
+  border-color: var(--color-primary-container);
+}
+
+
+/* ----------------------------------------------------------
+   10. MINUMAN POPULER
+   ---------------------------------------------------------- */
+#section-drinks .drinks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drink-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-outline-variant);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.drink-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.drink-card__thumbnail {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.drink-card__thumbnail--placeholder {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drink-card__thumbnail--placeholder .material-symbols-outlined {
+  color: var(--color-primary);
+  font-size: 28px;
+}
+
+.drink-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.drink-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin-bottom: 3px;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drink-card__desc {
+  font-size: 12px;
+  color: var(--color-on-surface-muted);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drink-card__price {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+.drink-card__btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  transition: transform 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.drink-card__btn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.drink-card__btn:active {
+  transform: scale(0.88);
+}
+
+.drink-card__btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+
+/* ----------------------------------------------------------
+   11. MAKANAN UTAMA
+   ---------------------------------------------------------- */
+#section-food .food-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.food-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-outline-variant);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.food-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.food-card__image-wrap {
+  height: 120px;
+  overflow: hidden;
+  position: relative;
+}
+
+.food-card__image-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(27,58,45,0.12) 100%);
+}
+
+.food-card__image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.food-card:hover .food-card__image-wrap img {
+  transform: scale(1.07);
+}
+
+.food-card__body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.food-card__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: -0.005em;
+}
+
+.food-card__price {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-primary);
+  margin-top: 3px;
+  letter-spacing: -0.01em;
+}
+
+.food-card__btn {
+  margin-top: 12px;
+  width: 100%;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 9px 0;
+  border-radius: var(--radius-md);
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+.food-card__btn:hover {
+  background-color: var(--color-primary-light);
+}
+
+.food-card__btn:active {
+  transform: scale(0.96);
+}
+
+
+/* ----------------------------------------------------------
+   12. CAMILAN — Bento Grid
+   ---------------------------------------------------------- */
+#section-snacks .bento-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+  height: 248px;
+}
+
+.bento-item {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.bento-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Large item — spans full height, 3 columns */
+.bento-item--large {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+/* Small item — 1 row, 3 columns */
+.bento-item--small {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.bento-item img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bento-item:hover img {
+  transform: scale(1.08);
+}
+
+.bento-item__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(13, 43, 30, 0.88) 0%,
+    rgba(13, 43, 30, 0.30) 55%,
+    transparent 100%
+  );
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.bento-item__name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.005em;
+}
+
+.bento-item__price {
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+
+/* ----------------------------------------------------------
+   13. FAB — KERANJANG
+   ---------------------------------------------------------- */
+#fab-cart {
+  position: fixed;
+  bottom: 92px;
+  left: 0;
+  width: 100%;
+  padding: 0 var(--spacing-margin-mobile);
+  z-index: var(--z-fab);
+}
+
+#fab-cart .fab-btn {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary) 50%,
+    var(--color-primary-mid) 100%
+  );
+  color: white;
+  width: 100%;
+  height: 56px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  box-shadow: 0 8px 24px rgba(13, 43, 30, 0.45), 0 2px 8px rgba(13, 43, 30, 0.30);
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+#fab-cart .fab-btn:hover {
+  box-shadow: 0 12px 32px rgba(13, 43, 30, 0.55), 0 4px 12px rgba(13, 43, 30, 0.35);
+  transform: translateY(-1px);
+}
+
+#fab-cart .fab-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(13, 43, 30, 0.35);
+}
+
+#fab-cart .fab-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#fab-cart .fab-icon-wrap {
+  position: relative;
+}
+
+#fab-cart .fab-icon-wrap .material-symbols-outlined {
+  font-size: 22px;
+}
+
+#fab-cart .fab-badge {
+  position: absolute;
+  top: -8px;
+  right: -9px;
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 9px;
+  font-weight: 800;
+  height: 18px;
+  width: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-primary);
+}
+
+#fab-cart .fab-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+#fab-cart .fab-total {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--color-accent);
+  letter-spacing: -0.01em;
+}
+
+
+/* ----------------------------------------------------------
+   14. BOTTOM NAVIGATION BAR
+   ---------------------------------------------------------- */
+#bottom-nav {
+  background-color: rgba(245, 240, 232, 0.96);
+  border-top: 1px solid var(--color-outline-variant);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 80px;
+  padding: 0 8px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 -4px 24px rgba(27,58,45,0.10), 0 -1px 0 var(--color-outline-variant);
+  z-index: var(--z-nav);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: var(--radius-lg);
+  gap: 3px;
+  transition: transform 0.1s ease, color 0.15s ease, background-color 0.15s ease;
+  min-width: 64px;
+}
+
+.nav-item:active {
+  transform: scale(0.88);
+}
+
+.nav-item--active {
+  color: var(--color-primary);
+}
+
+.nav-item--active .nav-label {
+  color: var(--color-primary);
+}
+
+.nav-item--active .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.nav-item--inactive {
+  color: var(--color-on-surface-muted);
+}
+
+.nav-item--inactive:hover {
+  color: var(--color-on-surface-variant);
+  background-color: var(--color-surface-container);
+}
+
+.nav-item .nav-label {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0.02em;
+}
+
+/* Active indicator dot */
+.nav-item--active::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  position: absolute;
+  bottom: 10px;
+}
+
+.nav-item {
+  position: relative;
+}
+
+
+/* ----------------------------------------------------------
+   15. ANIMATIONS & MICRO-INTERACTIONS
+   ---------------------------------------------------------- */
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Subtle pop-in */
+@keyframes pop-in {
+  0%   { transform: scale(0.85); opacity: 0; }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+/* Fade up */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-spin {
+  animation: spin 0.7s linear infinite;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease forwards;
+}
+
+/* Success feedback state */
+.btn-success {
+  background-color: var(--color-primary-container) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+
+/* ----------------------------------------------------------
+   16. SCROLLBAR UTILITY
+   ---------------------------------------------------------- */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
