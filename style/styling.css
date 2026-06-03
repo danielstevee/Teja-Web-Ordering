@@ -96,7 +96,7 @@
 
   /* ── Typography ── */
   --font-display: 'Playfair Display', serif;
-  --font-base:    'DM Sans', sans-serif;
+  --font-base: 'Poppins', sans-serif;
 
   /* ── Shadows ── */
   --shadow-xs:  0 1px 3px rgba(27,58,45,0.06);

@@ -135,18 +135,22 @@
         </article>
 
         <!-- Card 2 — Americano Double Shot -->
-        <article class="drink-card">
-          <div class="drink-card__thumbnail--placeholder">
-            <span class="material-symbols-outlined">local_drink</span>
-          </div>
-          <div class="drink-card__info">
-            <p class="drink-card__name">Americano Double Shot</p>
-            <p class="drink-card__price">Rp 25.000</p>
-          </div>
-          <button class="drink-card__btn btn-add" aria-label="Tambah Americano Double Shot">
-            <span class="material-symbols-outlined">add</span>
-          </button>
-        </article>
+<article class="drink-card">
+  <img
+    class="drink-card__thumbnail"
+    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
+    alt="Americano Double Shot"
+  >
+
+  <div class="drink-card__info">
+    <p class="drink-card__name">Americano Double Shot</p>
+    <p class="drink-card__price">Rp 25.000</p>
+  </div>
+
+  <button class="drink-card__btn btn-add" aria-label="Tambah Americano Double Shot">
+    <span class="material-symbols-outlined">add</span>
+  </button>
+</article>
 
       </div>
     </section>
@@ -361,7 +365,97 @@
         this.classList.add('chip--active');
       });
     });
+
+ // ============================================================
+// Redirect ke detail.html
+// ============================================================
+
+function redirectToDetail(card, nameSelector, priceSelector, desc = '') {
+  const nama  = card.querySelector(nameSelector)?.textContent?.trim() || '';
+  const harga = card.querySelector(priceSelector)?.textContent?.trim() || '';
+  const img   = card.querySelector('img')?.src || '';
+
+  // Ambil angka dari harga "Rp 75.000" → 75000
+  const hargaAngka = parseInt(harga.replace(/\D/g, '')) || 0;
+
+  const url = `detail.html?nama=${encodeURIComponent(nama)}&harga=${hargaAngka}&img=${encodeURIComponent(img)}&desc=${encodeURIComponent(desc)}`;
+
+  window.location.href = url;
+}
+
+
+// ============================================================
+// FOOD CARD
+// ============================================================
+
+document.querySelectorAll('.food-card').forEach(card => {
+  card.addEventListener('click', function (e) {
+
+    // Abaikan klik tombol tambah
+    if (e.target.closest('.food-card__btn')) return;
+
+    redirectToDetail(
+      this,
+      '.food-card__name',
+      '.food-card__price',
+      'Menu makanan spesial UrbanDine yang dibuat dari bahan pilihan berkualitas.'
+    );
+  });
+});
+
+
+// ============================================================
+// DRINK CARD
+// ============================================================
+document.querySelectorAll('.drink-card').forEach(card => {
+  card.addEventListener('click', function(e){
+
+    if (e.target.closest('.drink-card__btn')) return;
+
+    const nama  = this.querySelector('.drink-card__name').textContent;
+    const harga = parseInt(
+      this.querySelector('.drink-card__price')
+        .textContent.replace(/\D/g,'')
+    );
+
+    const img = this.querySelector('img')?.src || '';
+
+    window.location.href =
+      `detail-drink.html?nama=${encodeURIComponent(nama)}
+      &harga=${harga}
+      &img=${encodeURIComponent(img)}`;
+  });
+});
+
+
+// ============================================================
+// HERO CARD
+// ============================================================
+
+const heroCard = document.querySelector('.hero-card');
+
+if (heroCard) {
+  heroCard.addEventListener('click', function (e) {
+
+    // Abaikan klik tombol tambah
+    if (e.target.closest('.btn-add-hero')) return;
+
+    const nama  = document.querySelector('.hero-title')?.textContent?.trim() || '';
+    const harga = document.querySelector('.hero-price')?.textContent?.trim() || '';
+    const img   = document.querySelector('.hero-card img')?.src || '';
+    const desc  = document.querySelector('.hero-desc')?.textContent?.trim() || '';
+
+    const hargaAngka = parseInt(harga.replace(/\D/g, '')) || 0;
+
+    const url = `detail.html?nama=${encodeURIComponent(nama)}&harga=${hargaAngka}&img=${encodeURIComponent(img)}&desc=${encodeURIComponent(desc)}`;
+
+    window.location.href = url;
+  });
+}
+
   </script>
 
+
+  
 </body>
 </html>

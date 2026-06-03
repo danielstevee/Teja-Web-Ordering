@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine — Kustomisasi Minuman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- CSS utama (sama dengan detail.html) -->
+  <link rel="stylesheet" href="style/styling.css">
+
+  <style>
+    body {
+      padding-bottom: 120px;
+    }
+
+    /* ── Hero image ── */
+    #detail-hero {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+    }
+
+    #detail-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #detail-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(13, 43, 30, 0.10) 0%,
+        rgba(13, 43, 30, 0.55) 100%
+      );
+    }
+
+    /* ── Info card overlap ── */
+    #detail-info-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      margin-top: -24px;
+      position: relative;
+      z-index: 2;
+      padding: 24px var(--spacing-margin-mobile) 0;
+      border: 1px solid var(--color-outline-variant);
+      border-bottom: none;
+    }
+
+    #detail-info-card .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    #detail-info-card .info-name {
+      font-size: 28px;
+      line-height: 36px;
+      font-weight: 600;
+      color: var(--color-on-surface);
+      letter-spacing: -0.01em;
+      flex: 1;
+    }
+
+    #detail-info-card .info-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+
+    /* ── Content sections ── */
+    #detail-content {
+      background-color: var(--color-surface);
+      padding: 0 var(--spacing-margin-mobile);
+    }
+
+    .detail-section {
+      padding: 24px 0;
+      border-top: 1px solid var(--color-outline-variant);
+    }
+
+    .detail-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .detail-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      letter-spacing: -0.005em;
+    }
+
+    /* Badge Wajib / Opsional */
+    .badge-required {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      background-color: var(--color-primary-container);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .badge-optional {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-on-surface-muted);
+    }
+
+    /* ── Radio chips (ukuran, suhu, gula) ── */
+    .chips-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .chips-scroll::-webkit-scrollbar { display: none; }
+
+    .radio-chip-label {
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .radio-chip-label input[type="radio"] {
+      display: none;
+    }
+
+    .radio-chip-label .chip-body {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--color-outline-variant);
+      background-color: var(--color-surface);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-on-surface-variant);
+      transition: all 0.18s ease;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .radio-chip-label input[type="radio"]:checked + .chip-body {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 10px rgba(27,58,45,0.30);
+    }
+
+    .radio-chip-label .chip-body:hover {
+      background-color: var(--color-primary-container);
+      color: var(--color-primary);
+      border-color: var(--color-primary-container);
+    }
+
+    /* Size chip — tampilkan harga tambahan */
+    .chip-size-extra {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.75;
+    }
+
+    /* ── Checkbox topping minuman ── */
+    .topping-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .topping-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background-color: var(--color-surface-container-low);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background-color 0.18s ease;
+    }
+
+    .topping-label:hover {
+      border-color: var(--color-outline-variant);
+      background-color: var(--color-surface-container);
+    }
+
+    .topping-label input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--color-outline);
+      background-color: var(--color-surface);
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .topping-label input[type="checkbox"]:checked {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .topping-label input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .topping-label:has(input:checked) {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-container);
+    }
+
+    .topping-info {
+      flex: 1;
+    }
+
+    .topping-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-on-surface);
+    }
+
+    .topping-desc {
+      font-size: 12px;
+      color: var(--color-on-surface-muted);
+      margin-top: 2px;
+    }
+
+    .topping-price {
+      font-size: 13px;
+      color: var(--color-primary);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* ── Catatan textarea ── */
+    .catatan-wrap {
+      position: relative;
+    }
+
+    .catatan-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: var(--color-surface-container-low);
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-base);
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--color-on-surface);
+      outline: none;
+      resize: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .catatan-textarea::placeholder {
+      color: var(--color-on-surface-muted);
+    }
+
+    .catatan-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.10);
+    }
+
+    .catatan-count {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-size: 11px;
+      color: var(--color-on-surface-muted);
+      font-weight: 500;
+      pointer-events: none;
+    }
+
+    /* ── Floating bottom bar ── */
+    #detail-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      z-index: 50;
+      background-color: rgba(245, 240, 232, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--color-outline-variant);
+      box-shadow: 0 -4px 24px rgba(27,58,45,0.10);
+      padding: 14px var(--spacing-margin-mobile) 20px;
+      max-width: 448px;
+    }
+
+
+    .bottom-bar-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Counter */
+    .qty-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      padding: 4px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      display: flex;
+      justify-content: center;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .qty-btn:hover {
+      background-color: var(--color-primary-container);
+    }
+
+    .qty-btn:active {
+      transform: scale(0.88);
+    }
+
+    .qty-btn .material-symbols-outlined {
+      font-size: 20px;
+
+    }
+
+    .qty-display {
+      width: 32px;
+      margin-top: -15px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+    }
+
+    /* ── Add to cart button ── */
+    .btn-add-cart {
+      flex: 1;
+      height: 52px;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border: none;
+      border-radius: var(--radius-xl);
+      font-family: var(--font-base);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-add-cart:hover {
+      background-color: var(--color-primary-light);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-1px);
+    }
+
+    .btn-add-cart:active {
+      transform: scale(0.97);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Nonaktifkan hover saat loading / success */
+    .btn-add-cart.loading,
+    .btn-add-cart.success {
+      pointer-events: none;
+      transform: none !important;
+      box-shadow: var(--shadow-md) !important;
+    }
+
+    /* Default content */
+    .btn-add-cart .btn-default-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn-add-cart .btn-label {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    /* Loading content */
+    .btn-add-cart .btn-loading-content {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .btn-add-cart.loading .btn-default-content  { display: none; }
+    .btn-add-cart.loading .btn-loading-content  { display: flex !important; }
+
+    /* Success content */
+    .btn-add-cart .btn-success-content {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .btn-add-cart.success .btn-default-content  { display: none; }
+    .btn-add-cart.success .btn-success-content  { display: flex !important; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header id="site-header">
+    <div class="header-inner">
+
+      <button class="btn-profile" onclick="history.back()" aria-label="Kembali">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <div class="header-brand">
+        <h1 style="font-family: var(--font-base); font-size: 17px; font-weight: 700; color: var(--color-on-surface); letter-spacing: -0.005em;">
+          Kustomisasi Minuman
+        </h1>
+      </div>
+
+      <!-- spacer biar judul tetap center -->
+      <div style="width: 40px;"></div>
+
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main style="margin-top: 64px; max-width: 448px; margin-left: auto; margin-right: auto;">
+
+    <!-- ── Hero Image ── -->
+    <section id="detail-hero">
+      <img
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
+        alt="Minuman"
+        id="detail-img"
+      >
+    </section>
+
+    <!-- ── Info Card ── -->
+    <section id="detail-info-card">
+      <div class="info-row">
+        <h2 class="info-name" id="detail-name">Velvet Iced Latte</h2>
+        <span class="info-price" id="detail-price">Rp 32.000</span>
+      </div>
+    </section>
+
+
+    <!-- ── Customization Sections ── -->
+    <div id="detail-content">
+
+      <!-- 1. Ukuran -->
+      <section class="detail-section">
+        <div class="detail-section-header">
+          <h3 class="detail-section-title">Ukuran</h3>
+          <span class="badge-required">Wajib</span>
+        </div>
+        <div class="chips-scroll">
+          <label class="radio-chip-label">
+            <input type="radio" name="ukuran" value="0" checked>
+            <span class="chip-body">
+              Regular (12oz)
+            </span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="ukuran" value="5000">
+            <span class="chip-body">
+              Large (16oz)
+              <span class="chip-size-extra">+5k</span>
+            </span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="ukuran" value="10000">
+            <span class="chip-body">
+              Extra Large (20oz)
+              <span class="chip-size-extra">+10k</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 2. Suhu -->
+      <section class="detail-section">
+        <div class="detail-section-header">
+          <h3 class="detail-section-title">Suhu</h3>
+          <span class="badge-required">Wajib</span>
+        </div>
+        <div class="chips-scroll">
+          <label class="radio-chip-label">
+            <input type="radio" name="suhu" checked>
+            <span class="chip-body">
+              <span class="material-symbols-outlined" style="font-size:15px;">ac_unit</span>
+              Dingin (Iced)
+            </span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="suhu">
+            <span class="chip-body">
+              <span class="material-symbols-outlined" style="font-size:15px;">local_fire_department</span>
+              Panas (Hot)
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 3. Tingkat Gula -->
+      <section class="detail-section">
+        <div class="detail-section-header">
+          <h3 class="detail-section-title">Tingkat Gula</h3>
+          <span class="badge-required">Wajib</span>
+        </div>
+        <div class="chips-scroll">
+          <label class="radio-chip-label">
+            <input type="radio" name="gula" checked>
+            <span class="chip-body">0% (No Sugar)</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="gula">
+            <span class="chip-body">25% (Sedikit)</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="gula">
+            <span class="chip-body">50% (Sedang)</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="gula">
+            <span class="chip-body">75% (Manis)</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="gula">
+            <span class="chip-body">100% (Sangat Manis)</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 4. Es Batu -->
+      <section class="detail-section" id="section-es">
+        <div class="detail-section-header">
+          <h3 class="detail-section-title">Es Batu</h3>
+          <span class="badge-required">Wajib</span>
+        </div>
+        <div class="chips-scroll">
+          <label class="radio-chip-label">
+            <input type="radio" name="es" checked>
+            <span class="chip-body">Tanpa Es</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="es">
+            <span class="chip-body">Sedikit Es</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="es">
+            <span class="chip-body">Normal</span>
+          </label>
+          <label class="radio-chip-label">
+            <input type="radio" name="es">
+            <span class="chip-body">Extra Es</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 5. Tambahan -->
+      <section class="detail-section" id="section-topping">
+        <div class="detail-section-header">
+          <h3 class="detail-section-title">Tambahan</h3>
+          <span class="badge-optional">Opsional</span>
+        </div>
+        <div class="topping-list">
+
+          <label class="topping-label">
+            <input type="checkbox" class="topping-check" data-price="5000">
+            <div class="topping-info">
+              <p class="topping-name">Boba Pearl</p>
+              <p class="topping-desc">Boba kenyal rasa brown sugar</p>
+              <p class="topping-price">+ Rp 5.000</p>
+            </div>
+          </label>
+
+          <label class="topping-label">
+            <input type="checkbox" class="topping-check" data-price="5000">
+            <div class="topping-info">
+              <p class="topping-name">Jelly Cincau</p>
+              <p class="topping-desc">Cincau hitam segar</p>
+              <p class="topping-price">+ Rp 5.000</p>
+            </div>
+          </label>
+
+          <label class="topping-label">
+            <input type="checkbox" class="topping-check" data-price="7000">
+            <div class="topping-info">
+              <p class="topping-name">Whipped Cream</p>
+              <p class="topping-desc">Krim kocok susu segar</p>
+              <p class="topping-price">+ Rp 7.000</p>
+            </div>
+          </label>
+
+          <label class="topping-label">
+            <input type="checkbox" class="topping-check" data-price="6000">
+            <div class="topping-info">
+              <p class="topping-name">Espresso Shot Extra</p>
+              <p class="topping-desc">Tambahan 1 shot espresso</p>
+              <p class="topping-price">+ Rp 6.000</p>
+            </div>
+          </label>
+
+          <label class="topping-label">
+            <input type="checkbox" class="topping-check" data-price="5000">
+            <div class="topping-info">
+              <p class="topping-name">Oat Milk</p>
+              <p class="topping-desc">Ganti susu reguler dengan oat milk</p>
+              <p class="topping-price">+ Rp 5.000</p>
+            </div>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- 6. Catatan Khusus -->
+      <section class="detail-section" id="section-catatan">
+        <h3 class="detail-section-title" style="margin-bottom: 14px;">Catatan Khusus</h3>
+        <div class="catatan-wrap">
+          <textarea
+            class="catatan-textarea"
+            id="catatan-input"
+            rows="3"
+            maxlength="100"
+            placeholder="Contoh: Jangan terlalu pahit, tambah sirup vanilla extra..."
+          ></textarea>
+          <span class="catatan-count" id="catatan-count">0/100</span>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+
+   <!-- ============================================================
+       FLOATING BOTTOM BAR
+       ============================================================ -->
+  <div id="detail-bottom-bar">
+    
+      <!-- Quantity Counter -->
+      <div class="qty-counter">
+        <button class="qty-btn" id="qty-minus" aria-label="Kurangi">
+          <span class="material-symbols-outlined">remove</span>
+        </button>
+        <span class="qty-display" id="qty-display">1</span>
+        <button class="qty-btn" id="qty-plus" aria-label="Tambah">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+      </div>
+    <div class="bottom-bar-inner">
+      
+
+
+      <button class="btn-add-cart" id="btn-add-cart" type="button">
+  <span class="btn-default-content">
+    <span class="btn-label">Tambah ke Keranjang</span>
+  </span>
+  <span class="btn-loading-content">
+    <span class="material-symbols-outlined animate-spin" style="font-size:18px;">progress_activity</span>
+    Memuat...
+  </span>
+  <span class="btn-success-content">
+    <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
+    Berhasil!
+  </span>
+</button>
+
+    </div>
+  </div>
+
+
+  <script>
+    // ── Ambil data dari URL param ──
+    const params    = new URLSearchParams(window.location.search);
+    const namaMenu  = params.get('nama');
+    const hargaMenu = parseInt(params.get('harga')) || 32000;
+    const imgMenu   = params.get('img');
+
+    if (namaMenu) document.getElementById('detail-name').textContent = namaMenu;
+    if (imgMenu)  document.getElementById('detail-img').src = decodeURIComponent(imgMenu);
+
+    // ── Harga dasar ──
+    let basePrice = hargaMenu;
+    let qty       = 1;
+
+    // ── Tampilkan/sembunyikan opsi es berdasarkan suhu ──
+    const sectionEs = document.getElementById('section-es');
+
+    document.querySelectorAll('input[name="suhu"]').forEach((radio, index) => {
+      radio.addEventListener('change', () => {
+        // index 0 = Dingin, index 1 = Panas
+        if (index === 1) {
+          // Panas: sembunyikan es batu
+          sectionEs.style.display = 'none';
+        } else {
+          sectionEs.style.display = 'block';
+        }
+      });
+    });
+
+    // ── Hitung total harga ──
+    function getSizeExtra() {
+      const selected = document.querySelector('input[name="ukuran"]:checked');
+      return parseInt(selected?.value) || 0;
+    }
+
+    function getToppingTotal() {
+      let total = 0;
+      document.querySelectorAll('.topping-check:checked').forEach(cb => {
+        total += parseInt(cb.dataset.price) || 0;
+      });
+      return total;
+    }
+
+    function formatRupiah(n) {
+      return 'Rp ' + n.toLocaleString('id-ID');
+    }
+
+function updateTotal() {
+  const total = (basePrice + getSizeExtra() + getToppingTotal()) * qty;
+  document.getElementById('detail-price').textContent = formatRupiah(basePrice + getSizeExtra());
+}
+
+    // Init
+    updateTotal();
+
+    // ── Size change ──
+    document.querySelectorAll('input[name="ukuran"]').forEach(r => {
+      r.addEventListener('change', updateTotal);
+    });
+
+    // ── Topping change ──
+    document.querySelectorAll('.topping-check').forEach(cb => {
+      cb.addEventListener('change', updateTotal);
+    });
+
+    // ── Qty counter ──
+    document.getElementById('qty-minus').addEventListener('click', () => {
+      if (qty > 1) {
+        qty--;
+        document.getElementById('qty-display').textContent = qty;
+        updateTotal();
+      }
+    });
+
+    document.getElementById('qty-plus').addEventListener('click', () => {
+      qty++;
+      document.getElementById('qty-display').textContent = qty;
+      updateTotal();
+    });
+
+    // ── Catatan counter ──
+    const catatanInput = document.getElementById('catatan-input');
+    const catatanCount = document.getElementById('catatan-count');
+    catatanInput.addEventListener('input', () => {
+      catatanCount.textContent = catatanInput.value.length + '/100';
+    });
+
+       // Add to cart
+    document.getElementById('btn-add-cart').addEventListener('click', function () {
+      this.classList.add('loading');
+      this.disabled = true;
+
+      setTimeout(() => {
+        this.classList.remove('loading');
+        this.classList.add('success');
+
+        setTimeout(() => {
+          this.classList.remove('success');
+          this.disabled = false;
+          // history.back();
+        }, 2000);
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>
