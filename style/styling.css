@@ -112,6 +112,45 @@
 }
 
 
+
+/* ── Hero Slideshow ── */
+.hero-slideshow {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  gap: 12px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hero-slideshow::-webkit-scrollbar { display: none; }
+
+.hero-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+/* Dots */
+.hero-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-outline-variant, #ccc);
+  transition: background-color 0.2s ease, width 0.2s ease;
+}
+.hero-dot--active {
+  width: 18px;
+  border-radius: 3px;
+  background-color: var(--color-primary);
+}
+
 /* ----------------------------------------------------------
    3. RESET & BASE
    ---------------------------------------------------------- */

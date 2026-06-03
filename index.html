@@ -17,7 +17,9 @@
   <link rel="stylesheet" href="style/styling.css">
 </head>
 
+
 <body>
+
   <!-- ============================================================
        HEADER — Top App Bar
        ============================================================ -->
@@ -61,38 +63,84 @@
     </section>
 
 
-    <!-- --------------------------------------------------------
-         SECTION 2 — Signature Coffee / Hero
-         -------------------------------------------------------- -->
-    <section id="section-hero" class="section">
+   <!-- --------------------------------------------------------
+     SECTION 2 — Signature Coffee / Hero Slideshow
+     -------------------------------------------------------- -->
+<section id="section-hero" class="section">
 
-      <!-- Section Header -->
-      <div class="section-header">
-        <h2 class="text-headline-md text-primary ">Signature Coffee</h2>
-        <a href="#">Lihat Semua</a>
-      </div>
+  <!-- Section Header -->
+  <div class="section-header">
+    <h2 class="text-headline-md text-primary">Signature Coffee</h2>
+    <a href="#">Lihat Semua</a>
+  </div>
 
-      <!-- Hero Card -->
-      <div class="hero-card">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
-          alt="Velvet Iced Latte"
-        >
+  <!-- Slideshow Wrapper -->
+  <div class="hero-slideshow" id="hero-slideshow">
 
-        <!-- Overlay Content -->
-        <div class="hero-overlay">
-          <span class="badge-popular">MOST POPULAR</span>
-          <h3 class="hero-title">Velvet Iced Latte</h3>
-          <p class="hero-desc">Kopi premium dengan sentuhan vanilla artisan.</p>
-
-          <div class="hero-footer">
-            <span class="hero-price">Rp 32.000</span>
-            <button class="btn-add-hero btn-add">Tambah</button>
-          </div>
+    <!-- Slide 1 — Velvet Iced Latte -->
+    <div class="hero-card hero-slide"
+         data-nama="Velvet Iced Latte"
+         data-harga="32000"
+         data-img="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
+         data-desc="Kopi premium dengan sentuhan vanilla artisan.">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I" alt="Velvet Iced Latte">
+      <div class="hero-overlay">
+        <span class="badge-popular">MOST POPULAR</span>
+        <h3 class="hero-title">Velvet Iced Latte</h3>
+        <p class="hero-desc">Kopi premium dengan sentuhan vanilla artisan.</p>
+        <div class="hero-footer">
+          <span class="hero-price">Rp 32.000</span>
+          <button class="btn-add-hero btn-add">Tambah</button>
         </div>
-
       </div>
-    </section>
+    </div>
+
+    <!-- Slide 2 — Caramel Macchiato -->
+    <div class="hero-card hero-slide"
+         data-nama="Caramel Macchiato"
+         data-harga="35000"
+         data-img="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E"
+         data-desc="Espresso dengan lapisan susu steamed dan drizzle karamel manis.">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E" alt="Caramel Macchiato">
+      <div class="hero-overlay">
+        <span class="badge-popular">MOST POPULAR</span>
+        <h3 class="hero-title">Caramel Macchiato</h3>
+        <p class="hero-desc">Espresso dengan lapisan susu steamed.</p>
+        <div class="hero-footer">
+          <span class="hero-price">Rp 35.000</span>
+          <button class="btn-add-hero btn-add">Tambah</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 — Spanish Latte -->
+    <div class="hero-card hero-slide"
+         data-nama="Spanish Latte"
+         data-harga="33000"
+         data-img="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=1200&q=80"
+         data-desc="Perpaduan espresso, susu evaporasi, dan susu segar yang creamy.">
+      <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=1200&q=80" alt="Spanish Latte">
+      <div class="hero-overlay">
+        <span class="badge-popular">MOST POPULAR</span>
+        <h3 class="hero-title">Spanish Latte</h3>
+        <p class="hero-desc">Perpaduan susu evaporasi & susu segar.</p>
+        <div class="hero-footer">
+          <span class="hero-price">Rp 33.000</span>
+          <button class="btn-add-hero btn-add">Tambah</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Dots indicator -->
+  <div class="hero-dots" id="hero-dots">
+    <span class="hero-dot hero-dot--active"></span>
+    <span class="hero-dot"></span>
+    <span class="hero-dot"></span>
+  </div>
+
+</section>
 
 
     <!-- --------------------------------------------------------
@@ -431,27 +479,36 @@ document.querySelectorAll('.drink-card').forEach(card => {
 // ============================================================
 // HERO CARD
 // ============================================================
+// ============================================================
+// HERO SLIDESHOW — click to detail-drink.html + dots indicator
+// ============================================================
 
-const heroCard = document.querySelector('.hero-card');
+const slideshow = document.getElementById('hero-slideshow');
+const dots      = document.querySelectorAll('#hero-dots .hero-dot');
 
-if (heroCard) {
-  heroCard.addEventListener('click', function (e) {
-
-    // Abaikan klik tombol tambah
-    if (e.target.closest('.btn-add-hero')) return;
-
-    const nama  = document.querySelector('.hero-title')?.textContent?.trim() || '';
-    const harga = document.querySelector('.hero-price')?.textContent?.trim() || '';
-    const img   = document.querySelector('.hero-card img')?.src || '';
-    const desc  = document.querySelector('.hero-desc')?.textContent?.trim() || '';
-
-    const hargaAngka = parseInt(harga.replace(/\D/g, '')) || 0;
-
-    const url = `detail.html?nama=${encodeURIComponent(nama)}&harga=${hargaAngka}&img=${encodeURIComponent(img)}&desc=${encodeURIComponent(desc)}`;
-
-    window.location.href = url;
+// Update dots saat di-scroll
+if (slideshow) {
+  slideshow.addEventListener('scroll', () => {
+    const index = Math.round(slideshow.scrollLeft / slideshow.offsetWidth);
+    dots.forEach((d, i) => {
+      d.classList.toggle('hero-dot--active', i === index);
+    });
   });
 }
+
+// Klik slide → buka detail-drink.html
+document.querySelectorAll('.hero-slide').forEach(slide => {
+  slide.addEventListener('click', function (e) {
+    if (e.target.closest('.btn-add-hero')) return;
+
+    const nama  = this.dataset.nama  || '';
+    const harga = this.dataset.harga || '0';
+    const img   = this.dataset.img   || '';
+
+    window.location.href =
+      `detail-drink.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${encodeURIComponent(img)}`;
+  });
+});
 
   </script>
 
