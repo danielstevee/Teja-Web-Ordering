@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine — Semua Minuman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Pakai styling yang sama dengan index.html -->
+  <link rel="stylesheet" href="style/styling.css">
+
+  <style>
+    body {
+      padding-bottom: 32px;
+    }
+
+    /* ── Page wrapper ── */
+    .all-drinks-page {
+      max-width: 448px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-margin-mobile, 16px);
+    }
+
+    /* ── Search bar (reuse dari index) ── */
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--color-surface-container-low);
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-full);
+      padding: 10px 16px;
+      margin: 16px 0 20px;
+      margin-top: 90px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-wrapper.is-focused {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(27,58,45,0.10);
+    }
+    .search-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: var(--font-base);
+      font-size: 14px;
+      color: var(--color-on-surface);
+      outline: none;
+    }
+    .search-wrapper input::placeholder {
+      color: var(--color-on-surface-muted);
+    }
+    .search-icon .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--color-on-surface-muted);
+    }
+
+    /* ── Category chips ── */
+    .chips-row-page {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 20px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .chips-row-page::-webkit-scrollbar { display: none; }
+
+    /* ── Result count ── */
+    .result-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .result-count {
+      font-size: 13px;
+      color: var(--color-on-surface-muted);
+      font-weight: 500;
+    }
+    .sort-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-base);
+    }
+
+    /* ── Drinks grid (2 kolom) ── */
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ── Drink grid card ── */
+    .dg-card {
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-xl, 16px);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .dg-card:active {
+      transform: scale(0.97);
+    }
+
+    .dg-card__img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background-color: var(--color-surface-container-low);
+    }
+    .dg-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .dg-card:hover .dg-card__img-wrap img {
+      transform: scale(1.04);
+    }
+
+    /* Badge di atas gambar */
+    .dg-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+    }
+    .dg-badge--popular {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+    .dg-badge--new {
+      background-color: #E8F5E9;
+      color: #1B5E20;
+    }
+    .dg-badge--promo {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+
+    .dg-card__body {
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 2px;
+    }
+    .dg-card__name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+    .dg-card__desc {
+      font-size: 11px;
+      color: var(--color-on-surface-muted);
+      line-height: 1.4;
+      margin-top: 2px;
+      flex: 1;
+    }
+    .dg-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .dg-card__price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+    }
+
+    /* Add button di dalam card */
+    .dg-card__add {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    .dg-card__add:hover {
+      background-color: var(--color-primary-light);
+    }
+    .dg-card__add:active {
+      transform: scale(0.88);
+    }
+    .dg-card__add .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    /* btn-success override */
+    .dg-card__add.btn-success {
+      background-color: #2e7d32;
+    }
+
+    /* ── Empty state (hidden by default) ── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      gap: 12px;
+    }
+    .empty-state .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--color-on-surface-muted);
+    }
+    .empty-state p {
+      font-size: 14px;
+      color: var(--color-on-surface-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header id="site-header">
+    <div class="header-inner">
+
+      <button class="btn-profile" onclick="history.back()" aria-label="Kembali">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+<div class="header-brand" style="position:absolute; left:50%; transform:translateX(-50%);">
+  <h1 style="font-family: var(--font-base); font-size: 17px; font-weight: 700; color: var(--color-on-surface); letter-spacing: -0.005em; margin:0;">
+    Semua Minuman
+  </h1>
+</div>
+
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="all-drinks-page" style="margin-top: 64px;">
+
+    <!-- Search -->
+    <div class="search-wrapper" id="search-wrapper">
+      <div class="search-icon">
+        <span class="material-symbols-outlined">search</span>
+      </div>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Cari minuman favoritmu..."
+        aria-label="Cari minuman"
+      >
+    </div>
+
+    <!-- Category chips -->
+    <div class="chips-row-page" role="list" id="chip-row">
+      <button class="chip chip--active"  role="listitem" data-filter="semua">Semua</button>
+      <button class="chip chip--default" role="listitem" data-filter="kopi">Kopi</button>
+      <button class="chip chip--default" role="listitem" data-filter="non-kopi">Non-Kopi</button>
+      <button class="chip chip--default" role="listitem" data-filter="promo">Promo</button>
+      <button class="chip chip--default" role="listitem" data-filter="baru">Baru</button>
+    </div>
+
+    <!-- Result meta -->
+    <div class="result-meta">
+      <span class="result-count" id="result-count">8 minuman</span>
+      <button class="sort-btn" id="sort-btn">
+        <span class="material-symbols-outlined" style="font-size:16px;">swap_vert</span>
+        Urutkan
+      </button>
+    </div>
+
+    <!-- Grid -->
+    <div class="drinks-grid" id="drinks-grid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <span class="material-symbols-outlined">search_off</span>
+      <p>Minuman tidak ditemukan.<br>Coba kata kunci lain.</p>
+    </div>
+
+  </main>
+
+
+  <!-- ============================================================
+       BOTTOM NAV (sama dengan index.html)
+       ============================================================ -->
+  <nav id="bottom-nav" aria-label="Navigasi utama">
+    <button class="nav-item nav-item--active" aria-current="page">
+      <span class="material-symbols-outlined">restaurant_menu</span>
+      <span class="nav-label">Menu</span>
+    </button>
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="nav-label">Orders</span>
+    </button>
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span class="nav-label">Cart</span>
+    </button>
+  </nav>
+
+
+  <script>
+    /* ── Data 8 minuman ── */
+    const drinks = [
+      {
+        nama:   'Velvet Iced Latte',
+        harga:  32000,
+        desc:   'Kopi premium dengan sentuhan vanilla artisan.',
+        img:    'https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I',
+        badge:  'popular',
+        tags:   ['semua','kopi'],
+      },
+      {
+        nama:   'Matcha Premium Latte',
+        harga:  38000,
+        desc:   'Matcha grade A Jepang dengan susu segar pilihan.',
+        img:    'https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E',
+        badge:  null,
+        tags:   ['semua','non-kopi'],
+      },
+      {
+        nama:   'Americano Double Shot',
+        harga:  25000,
+        desc:   'Dua shot espresso dengan air panas yang seimbang.',
+        img:    'https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I',
+        badge:  'promo',
+        tags:   ['semua','kopi','promo'],
+      },
+      {
+        nama:   'Caramel Macchiato',
+        harga:  35000,
+        desc:   'Espresso dengan lapisan susu steamed dan drizzle karamel.',
+        img:    'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80',
+        badge:  'new',
+        tags:   ['semua','kopi','baru'],
+      },
+      {
+        nama:   'Spanish Latte',
+        harga:  33000,
+        desc:   'Perpaduan espresso, susu evaporasi, dan susu segar.',
+        img:    'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=800&q=80',
+        badge:  'new',
+        tags:   ['semua','kopi'],
+      },
+      {
+        nama:   'Taro Milk Tea',
+        harga:  30000,
+        desc:   'Teh susu dengan bubuk taro ungu yang creamy.',
+        img:    'https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=800&q=80',
+        badge:  'new',
+        tags:   ['semua','non-kopi','baru'],
+      },
+      {
+        nama:   'Brown Sugar Boba',
+        harga:  36000,
+        desc:   'Susu segar dengan boba kenyal dan sirup brown sugar.',
+        img:    'https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=800&q=80',
+        badge:  'popular',
+        tags:   ['semua','non-kopi'],
+      },
+      {
+        nama:   'Lychee Sparkling',
+        harga:  28000,
+        desc:   'Minuman soda leci segar yang menyegarkan di siang hari.',
+        img:    'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80',
+        badge:  'promo',
+        tags:   ['semua','non-kopi','promo'],
+      },
+    ];
+
+    /* ── State ── */
+    let activeFilter = 'semua';
+    let searchQuery  = '';
+    let sortAsc      = true;
+
+    /* ── Format harga ── */
+    function formatHarga(n) {
+      return 'Rp ' + n.toLocaleString('id-ID');
+    }
+
+    /* ── Render grid ── */
+    function renderGrid() {
+      const grid  = document.getElementById('drinks-grid');
+      const empty = document.getElementById('empty-state');
+      const count = document.getElementById('result-count');
+
+      let filtered = drinks.filter(d => {
+        const matchFilter = d.tags.includes(activeFilter);
+        const matchSearch = d.nama.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchFilter && matchSearch;
+      });
+
+      if (sortAsc) {
+        filtered.sort((a, b) => a.harga - b.harga);
+      } else {
+        filtered.sort((a, b) => b.harga - a.harga);
+      }
+
+      count.textContent = filtered.length + ' minuman';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'flex';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      grid.innerHTML = filtered.map((d, i) => {
+        let badgeHTML = '';
+        if (d.badge === 'popular') {
+          badgeHTML = `<span class="dg-badge dg-badge--popular">Popular</span>`;
+        } else if (d.badge === 'new') {
+          badgeHTML = `<span class="dg-badge dg-badge--new">New</span>`;
+        } else if (d.badge === 'promo') {
+          badgeHTML = `<span class="dg-badge dg-badge--promo">Promo</span>`;
+        }
+
+        return `
+          <article class="dg-card"
+            data-nama="${d.nama}"
+            data-harga="${d.harga}"
+            data-img="${encodeURIComponent(d.img)}"
+            style="animation: fadeInUp 0.3s ease both; animation-delay: ${i * 0.05}s"
+          >
+            <div class="dg-card__img-wrap">
+              <img src="${d.img}" alt="${d.nama}" loading="lazy">
+              ${badgeHTML}
+            </div>
+            <div class="dg-card__body">
+              <p class="dg-card__name">${d.nama}</p>
+              <p class="dg-card__desc">${d.desc}</p>
+              <div class="dg-card__footer">
+                <span class="dg-card__price">${formatHarga(d.harga)}</span>
+                <button class="dg-card__add btn-add" aria-label="Tambah ${d.nama}">
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      /* Bind klik card → detail-drink.html */
+      grid.querySelectorAll('.dg-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.dg-card__add')) return;
+          const nama  = this.dataset.nama;
+          const harga = this.dataset.harga;
+          const img   = this.dataset.img;
+          window.location.href = `detail-drink.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${img}`;
+        });
+      });
+
+      /* Bind tombol tambah */
+      grid.querySelectorAll('.btn-add').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const original = this.innerHTML;
+          this.innerHTML  = '<span class="material-symbols-outlined animate-spin" style="font-size:16px">progress_activity</span>';
+          this.disabled   = true;
+          setTimeout(() => {
+            this.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">check_circle</span>';
+            this.classList.add('btn-success');
+            setTimeout(() => {
+              this.innerHTML  = original;
+              this.classList.remove('btn-success');
+              this.disabled   = false;
+            }, 1500);
+          }, 600);
+        });
+      });
+    }
+
+    /* ── Chip filter ── */
+    document.querySelectorAll('#chip-row .chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('#chip-row .chip').forEach(c => {
+          c.classList.remove('chip--active');
+          c.classList.add('chip--default');
+        });
+        this.classList.remove('chip--default');
+        this.classList.add('chip--active');
+        activeFilter = this.dataset.filter;
+        renderGrid();
+      });
+    });
+
+    /* ── Search ── */
+    const searchInput   = document.getElementById('search-input');
+    const searchWrapper = document.getElementById('search-wrapper');
+
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      renderGrid();
+    });
+    searchInput.addEventListener('focus', () => searchWrapper.classList.add('is-focused'));
+    searchInput.addEventListener('blur',  () => searchWrapper.classList.remove('is-focused'));
+
+    /* ── Sort toggle ── */
+    document.getElementById('sort-btn').addEventListener('click', () => {
+      sortAsc = !sortAsc;
+      document.getElementById('sort-btn').innerHTML = `
+        <span class="material-symbols-outlined" style="font-size:16px;">swap_vert</span>
+        ${sortAsc ? 'Termurah' : 'Termahal'}
+      `;
+      renderGrid();
+    });
+
+    /* ── Animasi ── */
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /* ── Init ── */
+    renderGrid();
+  </script>
+
+</body>
+</html>

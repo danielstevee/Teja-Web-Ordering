@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine — Semua Makanan</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style/styling.css">
+
+  <style>
+    body {
+      padding-bottom: 32px;
+    }
+
+    .all-food-page {
+      max-width: 448px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-margin-mobile, 16px);
+    }
+
+    /* ── Search bar ── */
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--color-surface-container-low);
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-full);
+      padding: 10px 16px;
+      margin: 16px 0 20px;
+      margin-top: 90px !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-wrapper.is-focused {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(27,58,45,0.10);
+    }
+    .search-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: var(--font-base);
+      font-size: 14px;
+      color: var(--color-on-surface);
+      outline: none;
+    }
+    .search-wrapper input::placeholder {
+      color: var(--color-on-surface-muted);
+    }
+    .search-icon .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--color-on-surface-muted);
+    }
+
+    /* ── Category chips ── */
+    .chips-row-page {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 20px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .chips-row-page::-webkit-scrollbar { display: none; }
+
+    /* ── Result meta ── */
+    .result-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .result-count {
+      font-size: 13px;
+      color: var(--color-on-surface-muted);
+      font-weight: 500;
+    }
+    .sort-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-base);
+    }
+
+    /* ── Food list (1 kolom, horizontal card) ── */
+    .food-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── Food list card ── */
+    .fl-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-xl, 16px);
+      overflow: hidden;
+      cursor: pointer;
+      padding: 10px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .fl-card:active {
+      transform: scale(0.98);
+    }
+
+    .fl-card__img-wrap {
+      position: relative;
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: var(--color-surface-container-low);
+    }
+    .fl-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .fl-card:hover .fl-card__img-wrap img {
+      transform: scale(1.06);
+    }
+
+    .fl-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+    }
+    .fl-badge--popular {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+    .fl-badge--new {
+      background-color: #E8F5E9;
+      color: #1B5E20;
+    }
+    .fl-badge--promo {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+
+    .fl-card__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .fl-card__name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fl-card__desc {
+      font-size: 12px;
+      color: var(--color-on-surface-muted);
+      line-height: 1.4;
+      margin-top: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .fl-card__price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-top: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .fl-card__add {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    .fl-card__add:hover {
+      background-color: var(--color-primary-light);
+    }
+    .fl-card__add:active {
+      transform: scale(0.88);
+    }
+    .fl-card__add .material-symbols-outlined {
+      font-size: 20px;
+    }
+    .fl-card__add.btn-success {
+      background-color: #2e7d32;
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      gap: 12px;
+    }
+    .empty-state .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--color-on-surface-muted);
+    }
+    .empty-state p {
+      font-size: 14px;
+      color: var(--color-on-surface-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="site-header">
+    <div class="header-inner">
+      <button class="btn-profile" onclick="history.back()" aria-label="Kembali">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+<div class="header-brand" style="position:absolute; left:50%; transform:translateX(-50%);">
+  <h1 style="font-family: var(--font-base); font-size: 17px; font-weight: 700; color: var(--color-on-surface); letter-spacing: -0.005em; margin:0;">
+    Makanan Utama
+  </h1>
+</div>
+
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="all-food-page" style="margin-top: 64px;">
+
+    <!-- Search -->
+    <div class="search-wrapper" id="search-wrapper">
+      <div class="search-icon">
+        <span class="material-symbols-outlined">search</span>
+      </div>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Cari makanan favoritmu..."
+        aria-label="Cari makanan"
+      >
+    </div>
+
+    <!-- Chips -->
+    <div class="chips-row-page" role="list" id="chip-row">
+      <button class="chip chip--active"  role="listitem" data-filter="semua">Semua</button>
+      <button class="chip chip--default" role="listitem" data-filter="western">Western</button>
+      <button class="chip chip--default" role="listitem" data-filter="lokal">Lokal</button>
+      <button class="chip chip--default" role="listitem" data-filter="pasta">Pasta</button>
+      <button class="chip chip--default" role="listitem" data-filter="promo">Promo</button>
+      <button class="chip chip--default" role="listitem" data-filter="baru">Baru</button>
+    </div>
+
+    <!-- Result meta -->
+    <div class="result-meta">
+      <span class="result-count" id="result-count">8 makanan</span>
+      <button class="sort-btn" id="sort-btn">
+        <span class="material-symbols-outlined" style="font-size:16px;">swap_vert</span>
+        Urutkan
+      </button>
+    </div>
+
+    <!-- List -->
+    <div class="food-list" id="food-list"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <span class="material-symbols-outlined">search_off</span>
+      <p>Makanan tidak ditemukan.<br>Coba kata kunci lain.</p>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav id="bottom-nav" aria-label="Navigasi utama">
+    <button class="nav-item nav-item--active" aria-current="page">
+      <span class="material-symbols-outlined">restaurant_menu</span>
+      <span class="nav-label">Menu</span>
+    </button>
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="nav-label">Orders</span>
+    </button>
+    <button class="nav-item nav-item--inactive">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span class="nav-label">Cart</span>
+    </button>
+  </nav>
+
+  <script>
+    const foods = [
+      {
+        nama:  'Beef Burger Wagyu',
+        harga: 75000,
+        desc:  'Patty wagyu premium dengan saus BBQ smokey dan keju cheddar leleh.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCLwguhTb2ICpeAjNI6x17NGsuypwi0yRSO6LZZVygOGYZxP9Jm-toblYjW2UGGD-qF3pgUTIps0n51amK4zDGoS7M5O7EMRwBPR_wx9F-6k4c0fUPmLHacbqbUnhVJDJMTW8mWc4BqL5GAN6uhOieG82FgcvR7ny7m_HQ2Y18tbxdZKySx_NcyBOJd0nmiBW6nKfuvj7Jfw2P52ASuRoEelD4SWjJtUGVnXWJ7GBL0fROjnVYyeBztuYQ-ur3eiLaE6XC3f99iru4',
+        badge: 'popular',
+        tags:  ['semua','western'],
+      },
+      {
+        nama:  'Salad Ayam Bakar',
+        harga: 45000,
+        desc:  'Ayam bakar iris dengan mixed greens, cherry tomato, dan dressing madu lemon.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCNQEFHD3N5T8z4wp7wDciYLPW48Cghdgv89wyUN1e9yh1ZVPYTrq__TLJofD27NeCUOwLVLiS2VAmsYjzBKLd-2S1sO234YImQKSwlpixG5C009gAc6qwoh7oC_muucfiJFmKx7beWTH03Fd_nZRYPoJp0oyKdUaUdoqDU4qYHmpudu6rSvklz5SlJhK3Cm6RQiDmLQntWvLehEXVxfKe8uGuSBQ81Qfnuxcsok2zDrUPg4TJucfm8h85QIlqt22LvEJ6EkAFuLIg',
+        badge: null,
+        tags:  ['semua','western'],
+      },
+      {
+        nama:  'Nasi Goreng Spesial',
+        harga: 45000,
+        desc:  'Nasi goreng khas dengan ayam, telur mata sapi, kerupuk, dan acar segar.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCVYpAqijbhZ51WsHduvSI7hLiDglxC-sbwUK_WBgqJsgcoYlwHPe9emBTvOpa5203-ve_D2Yw5Cb-xx32Qrn1RTfeWnZdBvA0iLqBxGLzZ-KpdWnA7YLYcuAx2YC9WCstZXsNGTt5b1PpEwe1yqX3AHKHVpRPNpDTA7GJaDNVdd5cO7mjFwMdUqgPl9G1hWiq2Snet0hpojEFEFqfwvIOqteV5ZYnKSW-WOiwF_qcU9GcwbRprWPsX-dF9agmEuTXw_ryYHeaL6QQ',
+        badge: 'popular',
+        tags:  ['semua','lokal'],
+      },
+      {
+        nama:  'Pasta Carbonara',
+        harga: 58000,
+        desc:  'Spaghetti dengan saus krim telur, pancetta, dan parmesan asli Italia.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCLwguhTb2ICpeAjNI6x17NGsuypwi0yRSO6LZZVygOGYZxP9Jm-toblYjW2UGGD-qF3pgUTIps0n51amK4zDGoS7M5O7EMRwBPR_wx9F-6k4c0fUPmLHacbqbUnhVJDJMTW8mWc4BqL5GAN6uhOieG82FgcvR7ny7m_HQ2Y18tbxdZKySx_NcyBOJd0nmiBW6nKfuvj7Jfw2P52ASuRoEelD4SWjJtUGVnXWJ7GBL0fROjnVYyeBztuYQ-ur3eiLaE6XC3f99iru4',
+        badge: null,
+        tags:  ['semua','pasta'],
+      },
+      {
+        nama:  'Ayam Geprek Sambal Matah',
+        harga: 38000,
+        desc:  'Ayam crispy geprek dengan sambal matah Bali yang segar dan pedas.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCVYpAqijbhZ51WsHduvSI7hLiDglxC-sbwUK_WBgqJsgcoYlwHPe9emBTvOpa5203-ve_D2Yw5Cb-xx32Qrn1RTfeWnZdBvA0iLqBxGLzZ-KpdWnA7YLYcuAx2YC9WCstZXsNGTt5b1PpEwe1yqX3AHKHVpRPNpDTA7GJaDNVdd5cO7mjFwMdUqgPl9G1hWiq2Snet0hpojEFEFqfwvIOqteV5ZYnKSW-WOiwF_qcU9GcwbRprWPsX-dF9agmEuTXw_ryYHeaL6QQ',
+        badge: 'new',
+        tags:  ['semua','lokal','baru'],
+      },
+      {
+        nama:  'Pasta Arrabiata',
+        harga: 52000,
+        desc:  'Penne dengan saus tomat pedas bawang putih dan cabai kering khas Italia.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCLwguhTb2ICpeAjNI6x17NGsuypwi0yRSO6LZZVygOGYZxP9Jm-toblYjW2UGGD-qF3pgUTIps0n51amK4zDGoS7M5O7EMRwBPR_wx9F-6k4c0fUPmLHacbqbUnhVJDJMTW8mWc4BqL5GAN6uhOieG82FgcvR7ny7m_HQ2Y18tbxdZKySx_NcyBOJd0nmiBW6nKfuvj7Jfw2P52ASuRoEelD4SWjJtUGVnXWJ7GBL0fROjnVYyeBztuYQ-ur3eiLaE6XC3f99iru4',
+        badge: 'promo',
+        tags:  ['semua','pasta','promo'],
+      },
+      {
+        nama:  'Mie Goreng Seafood',
+        harga: 48000,
+        desc:  'Mie goreng dengan udang, cumi, kerang, dan bumbu khas UrbanDine.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCNQEFHD3N5T8z4wp7wDciYLPW48Cghdgv89wyUN1e9yh1ZVPYTrq__TLJofD27NeCUOwLVLiS2VAmsYjzBKLd-2S1sO234YImQKSwlpixG5C009gAc6qwoh7oC_muucfiJFmKx7beWTH03Fd_nZRYPoJp0oyKdUaUdoqDU4qYHmpudu6rSvklz5SlJhK3Cm6RQiDmLQntWvLehEXVxfKe8uGuSBQ81Qfnuxcsok2zDrUPg4TJucfm8h85QIlqt22LvEJ6EkAFuLIg',
+        badge: 'new',
+        tags:  ['semua','lokal','baru'],
+      },
+      {
+        nama:  'Club Sandwich',
+        harga: 55000,
+        desc:  'Sandwich tiga lapis dengan ayam panggang, bacon, selada, tomat, dan mayo.',
+        img:   'https://lh3.googleusercontent.com/aida-public/AB6AXuCLwguhTb2ICpeAjNI6x17NGsuypwi0yRSO6LZZVygOGYZxP9Jm-toblYjW2UGGD-qF3pgUTIps0n51amK4zDGoS7M5O7EMRwBPR_wx9F-6k4c0fUPmLHacbqbUnhVJDJMTW8mWc4BqL5GAN6uhOieG82FgcvR7ny7m_HQ2Y18tbxdZKySx_NcyBOJd0nmiBW6nKfuvj7Jfw2P52ASuRoEelD4SWjJtUGVnXWJ7GBL0fROjnVYyeBztuYQ-ur3eiLaE6XC3f99iru4',
+        badge: 'promo',
+        tags:  ['semua','western','promo'],
+      },
+    ];
+
+    let activeFilter = 'semua';
+    let searchQuery  = '';
+    let sortAsc      = true;
+
+    function formatHarga(n) {
+      return 'Rp ' + n.toLocaleString('id-ID');
+    }
+
+    function renderList() {
+      const list  = document.getElementById('food-list');
+      const empty = document.getElementById('empty-state');
+      const count = document.getElementById('result-count');
+
+      let filtered = foods.filter(d => {
+        return d.tags.includes(activeFilter) &&
+               d.nama.toLowerCase().includes(searchQuery.toLowerCase());
+      });
+
+      filtered.sort((a, b) => sortAsc ? a.harga - b.harga : b.harga - a.harga);
+      count.textContent = filtered.length + ' makanan';
+
+      if (filtered.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'flex';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      list.innerHTML = filtered.map((d, i) => {
+        let badgeHTML = '';
+        if (d.badge === 'popular') badgeHTML = `<span class="fl-badge fl-badge--popular">Popular</span>`;
+        else if (d.badge === 'new') badgeHTML = `<span class="fl-badge fl-badge--new">New</span>`;
+        else if (d.badge === 'promo') badgeHTML = `<span class="fl-badge fl-badge--promo">Promo</span>`;
+
+        return `
+          <article class="fl-card"
+            data-nama="${d.nama}"
+            data-harga="${d.harga}"
+            data-img="${encodeURIComponent(d.img)}"
+            data-desc="${encodeURIComponent(d.desc)}"
+            style="animation: fadeInUp 0.3s ease both; animation-delay: ${i * 0.05}s"
+          >
+            <div class="fl-card__img-wrap">
+              <img src="${d.img}" alt="${d.nama}" loading="lazy">
+              ${badgeHTML}
+            </div>
+            <div class="fl-card__info">
+              <p class="fl-card__name">${d.nama}</p>
+              <p class="fl-card__desc">${d.desc}</p>
+              <p class="fl-card__price">${formatHarga(d.harga)}</p>
+            </div>
+            <button class="fl-card__add btn-add" aria-label="Tambah ${d.nama}">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </article>
+        `;
+      }).join('');
+
+      /* Klik card → detail.html */
+      list.querySelectorAll('.fl-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.fl-card__add')) return;
+          const nama  = this.dataset.nama;
+          const harga = this.dataset.harga;
+          const img   = this.dataset.img;
+          const desc  = this.dataset.desc;
+          window.location.href = `detail.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${img}&desc=${desc}`;
+        });
+      });
+
+      /* Tombol tambah */
+      list.querySelectorAll('.btn-add').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const original = this.innerHTML;
+          this.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size:18px">progress_activity</span>';
+          this.disabled  = true;
+          setTimeout(() => {
+            this.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">check_circle</span>';
+            this.classList.add('btn-success');
+            setTimeout(() => {
+              this.innerHTML = original;
+              this.classList.remove('btn-success');
+              this.disabled  = false;
+            }, 1500);
+          }, 600);
+        });
+      });
+    }
+
+    /* Chips */
+    document.querySelectorAll('#chip-row .chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('#chip-row .chip').forEach(c => {
+          c.classList.remove('chip--active');
+          c.classList.add('chip--default');
+        });
+        this.classList.remove('chip--default');
+        this.classList.add('chip--active');
+        activeFilter = this.dataset.filter;
+        renderList();
+      });
+    });
+
+    /* Search */
+    const searchInput   = document.getElementById('search-input');
+    const searchWrapper = document.getElementById('search-wrapper');
+    searchInput.addEventListener('input', () => { searchQuery = searchInput.value; renderList(); });
+    searchInput.addEventListener('focus', () => searchWrapper.classList.add('is-focused'));
+    searchInput.addEventListener('blur',  () => searchWrapper.classList.remove('is-focused'));
+
+    /* Sort */
+    document.getElementById('sort-btn').addEventListener('click', () => {
+      sortAsc = !sortAsc;
+      document.getElementById('sort-btn').innerHTML = `
+        <span class="material-symbols-outlined" style="font-size:16px;">swap_vert</span>
+        ${sortAsc ? 'Termurah' : 'Termahal'}
+      `;
+      renderList();
+    });
+
+    /* Animasi */
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    renderList();
+  </script>
+
+</body>
+</html>
