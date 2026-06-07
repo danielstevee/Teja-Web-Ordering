@@ -4,80 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UrbanDine</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style/styling.css">
-
   <style>
-    .empty-state {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 64px 24px;
-    }
-    .empty-state .material-symbols-outlined {
-      font-size: 64px;
-      color: var(--color-outline);
-      margin-bottom: 12px;
-    }
-    .empty-state h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--color-on-surface);
-    }
-    .empty-state p {
-      margin: 0;
-      line-height: 1.6;
-      color: var(--color-on-surface-muted);
-    }
-
-    /* ── Drinks list — vertical scroll ── */
-    .drinks-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 4px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--color-outline-variant, #ddd) transparent;
-    }
+    .empty-state { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px; }
+    .empty-state .material-symbols-outlined { font-size: 64px; color: var(--color-outline); margin-bottom: 12px; }
+    .empty-state h3 { margin: 0 0 8px; font-size: 18px; font-weight: 700; color: var(--color-on-surface); }
+    .empty-state p { margin: 0; line-height: 1.6; color: var(--color-on-surface-muted); }
+    .drinks-list { display: flex; flex-direction: column; gap: 12px; max-height: 300px; overflow-y: auto; padding-right: 4px; scrollbar-width: thin; scrollbar-color: var(--color-outline-variant, #ddd) transparent; }
     .drinks-list::-webkit-scrollbar { width: 4px; }
     .drinks-list::-webkit-scrollbar-track { background: transparent; }
-    .drinks-list::-webkit-scrollbar-thumb {
-      background-color: var(--color-outline-variant, #ddd);
-      border-radius: 99px;
-    }
-
-    /* ── Food grid — horizontal scroll ── */
-    .food-grid {
-      display: flex;
-      flex-direction: row;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    .drinks-list::-webkit-scrollbar-thumb { background-color: var(--color-outline-variant, #ddd); border-radius: 99px; }
+    .food-grid { display: flex; flex-direction: row; gap: 12px; overflow-x: auto; padding-bottom: 8px; -ms-overflow-style: none; scrollbar-width: none; }
     .food-grid::-webkit-scrollbar { display: none; }
-
-    .food-card {
-      flex: 0 0 160px;
-      min-width: 160px;
-    }
+    .food-card { flex: 0 0 160px; min-width: 160px; }
+    #fab-cart { transition: opacity 0.25s ease, transform 0.25s ease; }
+    #fab-cart.fab--hidden { opacity: 0; pointer-events: none; transform: translateY(16px); }
+    @keyframes fab-bump { 0%{transform:scale(1)} 40%{transform:scale(1.07)} 100%{transform:scale(1)} }
+    #fab-cart.fab--bump .fab-btn { animation: fab-bump 0.3s ease; }
+    @keyframes badge-pop { 0%{transform:scale(1)} 50%{transform:scale(1.5)} 100%{transform:scale(1)} }
+    .fab-badge.badge--pop { animation: badge-pop 0.3s ease; }
   </style>
 </head>
-
 <body>
 
-  <!-- HEADER -->
   <header id="site-header">
     <div class="header-inner">
       <div class="logo">
@@ -87,32 +40,21 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main class="page-container">
 
-    <!-- SECTION 1 — Search Bar -->
     <section id="section-search" class="section">
       <div class="search-wrapper" id="search-wrapper">
-        <div class="search-icon">
-          <span class="material-symbols-outlined">search</span>
-        </div>
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Cari kopi atau menu favoritmu..."
-          aria-label="Cari menu"
-        >
+        <div class="search-icon"><span class="material-symbols-outlined">search</span></div>
+        <input type="text" id="search-input" placeholder="Cari kopi atau menu favoritmu..." aria-label="Cari menu">
       </div>
     </section>
 
-    <!-- Empty State -->
     <div class="empty-state" id="empty-state">
       <span class="material-symbols-outlined">search_off</span>
       <h3>Menu Tidak Ditemukan</h3>
       <p>Kami tidak menemukan menu yang sesuai dengan pencarian Anda.</p>
     </div>
 
-    <!-- SECTION 2 — Hero Slideshow -->
     <section id="section-hero" class="section">
       <div class="section-header">
         <h2 class="text-headline-md text-primary">Signature Coffee</h2>
@@ -120,8 +62,7 @@
       <div class="hero-slideshow" id="hero-slideshow">
 
         <div class="hero-card hero-slide"
-             data-nama="Velvet Iced Latte"
-             data-harga="32000"
+             data-nama="Velvet Iced Latte" data-harga="32000"
              data-img="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
              data-desc="Kopi premium dengan sentuhan vanilla artisan.">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I" alt="Velvet Iced Latte">
@@ -131,14 +72,13 @@
             <p class="hero-desc">Kopi premium dengan sentuhan vanilla artisan.</p>
             <div class="hero-footer">
               <span class="hero-price">Rp 32.000</span>
-              <button class="btn-add-hero btn-add">Tambah</button>
+              <button class="btn-add-hero btn-add" data-nama="Velvet Iced Latte" data-harga="32000">Tambah</button>
             </div>
           </div>
         </div>
 
         <div class="hero-card hero-slide"
-             data-nama="Caramel Macchiato"
-             data-harga="35000"
+             data-nama="Caramel Macchiato" data-harga="35000"
              data-img="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E"
              data-desc="Espresso dengan lapisan susu steamed dan drizzle karamel manis.">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E" alt="Caramel Macchiato">
@@ -148,14 +88,13 @@
             <p class="hero-desc">Espresso dengan lapisan susu steamed.</p>
             <div class="hero-footer">
               <span class="hero-price">Rp 35.000</span>
-              <button class="btn-add-hero btn-add">Tambah</button>
+              <button class="btn-add-hero btn-add" data-nama="Caramel Macchiato" data-harga="35000">Tambah</button>
             </div>
           </div>
         </div>
 
         <div class="hero-card hero-slide"
-             data-nama="Spanish Latte"
-             data-harga="33000"
+             data-nama="Spanish Latte" data-harga="33000"
              data-img="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=1200&q=80"
              data-desc="Perpaduan espresso, susu evaporasi, dan susu segar yang creamy.">
           <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=1200&q=80" alt="Spanish Latte">
@@ -165,7 +104,7 @@
             <p class="hero-desc">Perpaduan susu evaporasi & susu segar.</p>
             <div class="hero-footer">
               <span class="hero-price">Rp 33.000</span>
-              <button class="btn-add-hero btn-add">Tambah</button>
+              <button class="btn-add-hero btn-add" data-nama="Spanish Latte" data-harga="33000">Tambah</button>
             </div>
           </div>
         </div>
@@ -178,10 +117,6 @@
       </div>
     </section>
 
-   
-
-
-    <!-- SECTION 4 — Minuman -->
     <section id="section-drinks" class="section">
       <div class="section-header">
         <h2 class="text-headline-md text-primary">Signature Coffee</h2>
@@ -190,53 +125,45 @@
       <div class="drinks-list">
 
         <article class="drink-card">
-          <img class="drink-card__thumbnail"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E"
-            alt="Matcha Premium Latte">
+          <img class="drink-card__thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E" alt="Matcha Premium Latte">
           <div class="drink-card__info">
             <p class="drink-card__name">Matcha Premium Latte</p>
             <p class="drink-card__price">Rp 38.000</p>
           </div>
-          <button class="drink-card__btn btn-add" aria-label="Tambah Matcha Premium Latte">
+          <button class="drink-card__btn btn-add" data-nama="Matcha Premium Latte" data-harga="38000" aria-label="Tambah Matcha Premium Latte">
             <span class="material-symbols-outlined">add</span>
           </button>
         </article>
 
         <article class="drink-card">
-          <img class="drink-card__thumbnail"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I"
-            alt="Americano Double Shot">
+          <img class="drink-card__thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmrP-aha7DDtpY_vgs9eAvoct1YX2Qy8aGYNvVMKeOJT4ixlaVRvJU3yHj_Dp6DsYMj1Ha2nI2LzmXVKomAU4QCcK3cO52gGTMt4cyhN0rNpNa_LzrbQZ1BIHq1pmWmswqMF1gV8D0EHXVVGf9xYL2Vkt-scX7djdh9Pyy3SP5dq0-GSVRr4YqHtKcaI6PGHZgEHX76yPWXQ1Xxu-IRlHq4VWFdlWPq6AbRwFzvDMelqOY7Jswu5sfxIBnElYo_NIwwnXWDpCnA7I" alt="Americano Double Shot">
           <div class="drink-card__info">
             <p class="drink-card__name">Americano Double Shot</p>
             <p class="drink-card__price">Rp 25.000</p>
           </div>
-          <button class="drink-card__btn btn-add" aria-label="Tambah Americano Double Shot">
+          <button class="drink-card__btn btn-add" data-nama="Americano Double Shot" data-harga="25000" aria-label="Tambah Americano Double Shot">
             <span class="material-symbols-outlined">add</span>
           </button>
         </article>
 
         <article class="drink-card">
-          <img class="drink-card__thumbnail"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E"
-            alt="Caramel Macchiato">
+          <img class="drink-card__thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwOvpQgjec8WEThXk3NZ6J0-4FfACkjHGdzj-LWn4kzOjL1DHUBRks-2GdKVCiT-UkiHb72CyZVPmJpXbZzF5ap0Rr65GIXzcutgRx5jlINFRXHYcGED4RXCBNbELS1bGXVqpmjRepIv3zHrTBUuBRTWUv-jeUj_6PIw32WN0CApAS97jNMw1RymQrJgzP9Bae5jzi8-YiFs5XdxzfDSLH3OXPW0-rL4OaxepObYARlLQjuq48Vj344Q4XQq50dmxPBCKxO_dgv7E" alt="Caramel Macchiato">
           <div class="drink-card__info">
             <p class="drink-card__name">Caramel Macchiato</p>
             <p class="drink-card__price">Rp 35.000</p>
           </div>
-          <button class="drink-card__btn btn-add" aria-label="Tambah Caramel Macchiato">
+          <button class="drink-card__btn btn-add" data-nama="Caramel Macchiato" data-harga="35000" aria-label="Tambah Caramel Macchiato">
             <span class="material-symbols-outlined">add</span>
           </button>
         </article>
 
         <article class="drink-card">
-          <img class="drink-card__thumbnail"
-            src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&q=80"
-            alt="Spanish Latte">
+          <img class="drink-card__thumbnail" src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&q=80" alt="Spanish Latte">
           <div class="drink-card__info">
             <p class="drink-card__name">Spanish Latte</p>
             <p class="drink-card__price">Rp 33.000</p>
           </div>
-          <button class="drink-card__btn btn-add" aria-label="Tambah Spanish Latte">
+          <button class="drink-card__btn btn-add" data-nama="Spanish Latte" data-harga="33000" aria-label="Tambah Spanish Latte">
             <span class="material-symbols-outlined">add</span>
           </button>
         </article>
@@ -244,7 +171,6 @@
       </div>
     </section>
 
-    <!-- SECTION 5 — Makanan Utama -->
     <section id="section-food" class="section">
       <div class="section-header">
         <h2 class="text-headline-md text-primary">Makanan Utama</h2>
@@ -259,7 +185,7 @@
           <div class="food-card__body">
             <p class="food-card__name">Beef Burger Wagyu</p>
             <p class="food-card__price">Rp 75.000</p>
-            <button class="food-card__btn btn-add">Tambah</button>
+            <button class="food-card__btn btn-add" data-nama="Beef Burger Wagyu" data-harga="75000">Tambah</button>
           </div>
         </article>
 
@@ -270,7 +196,7 @@
           <div class="food-card__body">
             <p class="food-card__name">Salad Ayam Bakar</p>
             <p class="food-card__price">Rp 45.000</p>
-            <button class="food-card__btn btn-add">Tambah</button>
+            <button class="food-card__btn btn-add" data-nama="Salad Ayam Bakar" data-harga="45000">Tambah</button>
           </div>
         </article>
 
@@ -281,7 +207,7 @@
           <div class="food-card__body">
             <p class="food-card__name">Nasi Goreng Spesial</p>
             <p class="food-card__price">Rp 45.000</p>
-            <button class="food-card__btn btn-add">Tambah</button>
+            <button class="food-card__btn btn-add" data-nama="Nasi Goreng Spesial" data-harga="45000">Tambah</button>
           </div>
         </article>
 
@@ -292,61 +218,56 @@
           <div class="food-card__body">
             <p class="food-card__name">Pasta Carbonara</p>
             <p class="food-card__price">Rp 58.000</p>
-            <button class="food-card__btn btn-add">Tambah</button>
+            <button class="food-card__btn btn-add" data-nama="Pasta Carbonara" data-harga="58000">Tambah</button>
           </div>
         </article>
 
       </div>
     </section>
 
-    <!-- SECTION 6 — Camilan -->
     <section id="section-snacks" class="section">
       <div class="section-header">
         <h2 class="text-headline-md text-primary">Camilan</h2>
         <a href="snacks-all.html">Lihat Semua</a>
       </div>
       <div class="bento-grid">
-
         <article class="bento-item bento-item--large">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN8XPN0gGtt029uyFNZQpBtgXei-ZyDeCb6Hp_WV_38hmr-CoiZPlJoOM-CBaSm2AvqxwjVXuXygKqTCMsYC-yNZw69C8dgsCxbWgO6VOqtJWbYLgi378LeJ2Ry0-fQVei3-O_8gUB0NINEl9PESmOKf-XBntuXZW0_DU5FMfjpqjfRFpSMWatiDiMgvbUBfdcAuUboYKUwGdkrprhQEE7jGo4vEA9JbRvU0Re1rDlWoDWbMQKGMgMatwVBGKu_xpK4JfX0Yv-Vlk" alt="Truffle Fries">
           <div class="bento-item__overlay">
             <p class="bento-item__name">Truffle Fries</p>
-            <p class="bento-item__price">Rp 35k</p>
+            <p class="bento-item__price">Rp 35.000</p>
           </div>
         </article>
-
         <article class="bento-item bento-item--small">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD97FzkmaA4pK_vi2jNWr0OoSW_XCHj5vWC_Oyc_HpoJraDGJzoY9F-4E5dtmLh1MQC5vbtqf635ga9jnrhDl6NsF0bB6fgr02cWamVGlJislHEIXZ18qG3J-xGpv3KjgCFh6Ge1xYK-PK5_euZZc4xhmLMRytZ_U_b9NFCoCXxSQ9CjUDn0Ucfxncd-JHnRPg6T9f19Z78jUEJralh_0oVqbizcDrIrsZIUOZ_F72a3FFZ7GUaiiFCvk1tSPoX1TFacvp_OBiGWDA" alt="Garlic Bread">
           <div class="bento-item__overlay">
             <p class="bento-item__name">Garlic Bread</p>
-            <p class="bento-item__price">Rp 28k</p>
+            <p class="bento-item__price">Rp 28.000</p>
           </div>
         </article>
-
         <article class="bento-item bento-item--small">
           <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzZ43zd4lreg9T3vmd01wD4wHiwa4R0seqqk8Bcv26s9MNGiP_LF6M6EsGgk0QlXfkAMN1g5EhlcTV75PgKlAd4Ot9AYalyneqmA82MgkYyJfNFIG-mjdIC6yFaem6bR_uJLsvXAL6dIfd0vMovWCkc4UeAUr4Xs2sPyct-ZUk55QwMaiAWpa3OW41dm3et049KYMbxvV67Oiz3N-GwcVj-gfkBAymvBuHe5RBE0rernsrZb5-S4vt0YCRHiqsgiAiYomsccrspgA" alt="Spicy Wings">
           <div class="bento-item__overlay">
             <p class="bento-item__name">Spicy Wings</p>
-            <p class="bento-item__price">Rp 42k</p>
+            <p class="bento-item__price">Rp 42.000</p>
           </div>
         </article>
-
       </div>
     </section>
 
   </main>
 
   <!-- FAB -->
-  <div id="fab-cart">
-    <button class="fab-btn" aria-label="Lihat keranjang">
+  <div id="fab-cart" class="fab--hidden">
+    <button class="fab-btn" aria-label="Lihat keranjang" id="fab-btn">
       <div class="fab-left">
         <div class="fab-icon-wrap">
           <span class="material-symbols-outlined">shopping_cart</span>
-          <span class="fab-badge" aria-label="2 item">2</span>
+          <span class="fab-badge" id="fab-badge" aria-label="0 item">0</span>
         </div>
         <span class="fab-label">Lihat Keranjang</span>
       </div>
-      <span class="fab-total">Rp 107.000</span>
+      <span class="fab-total" id="fab-total">Rp 0</span>
     </button>
   </div>
 
@@ -360,159 +281,93 @@
       <span class="material-symbols-outlined">receipt_long</span>
       <span class="nav-label">Orders</span>
     </button>
-    <button class="nav-item nav-item--inactive">
+    <button class="nav-item nav-item--inactive" id="nav-cart">
       <span class="material-symbols-outlined">shopping_cart</span>
       <span class="nav-label">Cart</span>
     </button>
   </nav>
 
+  <!-- ✅ Ganti semua cart logic lama dengan satu baris ini -->
+  <script src="cart.js"></script>
+
   <script>
-    // ============================================================
-    // BTN-ADD — Loading & Success feedback
-    // ============================================================
-    document.querySelectorAll('.btn-add').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation(); // jangan trigger click card
-        const originalContent = this.innerHTML;
-        const originalClass   = this.className;
-
-        this.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size:18px">progress_activity</span>';
-        this.disabled  = true;
-
-        setTimeout(() => {
-          this.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">check_circle</span>';
-          this.classList.add('btn-success');
-
-          setTimeout(() => {
-            this.innerHTML = originalContent;
-            this.className = originalClass;
-            this.disabled  = false;
-          }, 1500);
-        }, 600);
-      });
-    });
-
-    // ============================================================
-    // SEARCH BAR — focus effect + filter
-    // ============================================================
+    // ── SEARCH ──────────────────────────────────────────────────────
     const searchInput   = document.getElementById('search-input');
     const searchWrapper = document.getElementById('search-wrapper');
     const emptyState    = document.getElementById('empty-state');
-
-    const SECTION_IDS = ['section-hero', 'section-drinks', 'section-food', 'section-snacks'];
+    const SECTION_IDS   = ['section-hero', 'section-drinks', 'section-food', 'section-snacks'];
     const CARD_SELECTOR = '.drink-card, .food-card, .hero-slide, .bento-item';
 
     searchWrapper.addEventListener('focusin',  () => searchWrapper.classList.add('is-focused'));
     searchWrapper.addEventListener('focusout', () => searchWrapper.classList.remove('is-focused'));
-
     searchInput.addEventListener('input', function () {
       const query = this.value.trim().toLowerCase();
-
-      // Filter tiap card
       document.querySelectorAll(CARD_SELECTOR).forEach(card => {
-        const nameEl = card.querySelector(
-          '.drink-card__name, .food-card__name, .hero-title, .bento-item__name'
-        );
-        const name  = nameEl?.textContent?.toLowerCase() || '';
-        const match = query === '' || name.includes(query);
-        card.style.display = match ? '' : 'none';
+        const nameEl = card.querySelector('.drink-card__name, .food-card__name, .hero-title, .bento-item__name');
+        const name   = nameEl?.textContent?.toLowerCase() || '';
+        card.style.display = (query === '' || name.includes(query)) ? '' : 'none';
       });
-
-      // Sembunyikan section yang cardnya semua tersembunyi
       let anyVisible = false;
       SECTION_IDS.forEach(id => {
         const section = document.getElementById(id);
         if (!section) return;
-        const hasVisible = [...section.querySelectorAll(CARD_SELECTOR)]
-          .some(c => c.style.display !== 'none');
+        const hasVisible = [...section.querySelectorAll(CARD_SELECTOR)].some(c => c.style.display !== 'none');
         section.style.display = hasVisible ? '' : 'none';
         if (hasVisible) anyVisible = true;
       });
-
-
-      // Empty state
       emptyState.style.display = (!anyVisible && query !== '') ? 'flex' : 'none';
     });
 
-    // ============================================================
-    // CATEGORY CHIPS — active toggle
-    // ============================================================
-    document.querySelectorAll('#section-categories .chip').forEach(chip => {
-      chip.addEventListener('click', function () {
-        document.querySelectorAll('#section-categories .chip').forEach(c => {
-          c.classList.remove('chip--active');
-          c.classList.add('chip--default');
-        });
-        this.classList.remove('chip--default');
-        this.classList.add('chip--active');
-      });
-    });
-
-    // ============================================================
-    // REDIRECT helpers
-    // ============================================================
-    function redirectToDetail(card, nameSelector, priceSelector, desc = '') {
-      const nama       = card.querySelector(nameSelector)?.textContent?.trim() || '';
-      const hargaText  = card.querySelector(priceSelector)?.textContent?.trim() || '';
-      const img        = card.querySelector('img')?.src || '';
-      const hargaAngka = parseInt(hargaText.replace(/\D/g, '')) || 0;
-      window.location.href = `detail.html?nama=${encodeURIComponent(nama)}&harga=${hargaAngka}&img=${encodeURIComponent(img)}&desc=${encodeURIComponent(desc)}`;
-    }
-
-    // ============================================================
-    // FOOD CARD — klik card → detail makanan
-    // ============================================================
+    // ── REDIRECT helpers ────────────────────────────────────────────
     document.querySelectorAll('.food-card').forEach(card => {
       card.addEventListener('click', function (e) {
         if (e.target.closest('.food-card__btn')) return;
-        redirectToDetail(
-          this,
-          '.food-card__name',
-          '.food-card__price',
-          'Menu makanan spesial UrbanDine yang dibuat dari bahan pilihan berkualitas.'
-        );
+        const nama  = this.querySelector('.food-card__name')?.textContent?.trim() || '';
+        const harga = parseInt(this.querySelector('.food-card__price')?.textContent?.replace(/\D/g,'')) || 0;
+        const img   = this.querySelector('img')?.src || '';
+        window.location.href = `detail.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${encodeURIComponent(img)}&desc=${encodeURIComponent('Menu makanan spesial UrbanDine yang dibuat dari bahan pilihan berkualitas.')}`;
       });
     });
 
-    // ============================================================
-    // DRINK CARD — klik card → detail minuman
-    // ============================================================
     document.querySelectorAll('.drink-card').forEach(card => {
       card.addEventListener('click', function (e) {
         if (e.target.closest('.drink-card__btn')) return;
         const nama  = this.querySelector('.drink-card__name').textContent.trim();
-        const harga = parseInt(this.querySelector('.drink-card__price').textContent.replace(/\D/g, ''));
+        const harga = parseInt(this.querySelector('.drink-card__price').textContent.replace(/\D/g,''));
         const img   = this.querySelector('img')?.src || '';
         window.location.href = `detail-drink.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${encodeURIComponent(img)}`;
       });
     });
 
-    // ============================================================
-    // BENTO ITEM (Camilan) — klik → detail makanan
-    // ============================================================
     document.querySelectorAll('.bento-item').forEach(item => {
       item.addEventListener('click', function () {
-        const nama       = this.querySelector('.bento-item__name')?.textContent?.trim() || '';
-        const hargaText  = this.querySelector('.bento-item__price')?.textContent?.trim() || '';
-        const hargaAngka = parseInt(hargaText.replace(/\D/g, '')) || 0;
-        const img        = this.querySelector('img')?.src || '';
-        window.location.href = `detail.html?nama=${encodeURIComponent(nama)}&harga=${hargaAngka}&img=${encodeURIComponent(img)}&desc=`;
+        const nama  = this.querySelector('.bento-item__name')?.textContent?.trim() || '';
+        const harga = parseInt(this.querySelector('.bento-item__price')?.textContent?.replace(/\D/g,'')) || 0;
+        const img   = this.querySelector('img')?.src || '';
+        window.location.href = `detail.html?nama=${encodeURIComponent(nama)}&harga=${harga}&img=${encodeURIComponent(img)}&desc=`;
       });
     });
 
-    // ============================================================
-    // HERO SLIDESHOW — dots indicator + klik → detail minuman
-    // ============================================================
+    // ── HERO SLIDESHOW ──────────────────────────────────────────────
+
+    // ── FAB → Checkout ──────────────────────────────────────────────
+document.getElementById('fab-btn').addEventListener('click', () => {
+  window.location.href = 'checkout.html';
+});
+
+// ── Nav Cart → Checkout ─────────────────────────────────────────
+document.getElementById('nav-cart').addEventListener('click', () => {
+  window.location.href = 'checkout.html';
+});
+
     const slideshow = document.getElementById('hero-slideshow');
     const dots      = document.querySelectorAll('#hero-dots .hero-dot');
-
     if (slideshow) {
       slideshow.addEventListener('scroll', () => {
         const index = Math.round(slideshow.scrollLeft / slideshow.offsetWidth);
         dots.forEach((d, i) => d.classList.toggle('hero-dot--active', i === index));
       });
     }
-
     document.querySelectorAll('.hero-slide').forEach(slide => {
       slide.addEventListener('click', function (e) {
         if (e.target.closest('.btn-add-hero')) return;
@@ -523,6 +378,5 @@
       });
     });
   </script>
-
 </body>
 </html>

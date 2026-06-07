@@ -10,12 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-  <!-- CSS kamu -->
   <link rel="stylesheet" href="style/styling.css">
 
   <style>
-    /* Hanya style khusus halaman welcome yang belum ada di styling.css */
-
     body {
       min-height: 100dvh;
       display: flex;
@@ -26,11 +23,8 @@
       overflow: hidden;
     }
 
-    *{
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Background image */
     .welcome-bg {
       position: fixed;
       inset: 0;
@@ -41,7 +35,6 @@
       z-index: 0;
     }
 
-    /* Wrapper utama */
     .welcome-wrapper {
       position: relative;
       z-index: 1;
@@ -55,44 +48,43 @@
       padding: 64px 28px 48px;
     }
 
-    /* Logo */
     .welcome-logo {
-  width: 180px;
-  height: auto;
-  display: block;
-  margin-top: -20px;
-  margin-bottom: 1px;
-}
-.welcome-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 30px;
-  line-height: 38px;
-  font-weight: 700;
-  color: var(--color-primary);
-  text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: -0.02em;
-}
+      width: 180px;
+      height: auto;
+      display: block;
+      margin-top: -20px;
+      margin-bottom: 1px;
+    }
 
-.welcome-desc {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 15px;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--color-primary);
-  text-align: center;
-  max-width: 320px;
-  margin-bottom: 40px;
-}
+    .welcome-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 30px;
+      line-height: 38px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
 
-    /* Card input — glassmorphism */
+    .welcome-desc {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      line-height: 24px;
+      font-weight: 500;
+      color: var(--color-primary);
+      text-align: center;
+      max-width: 320px;
+      margin-bottom: 40px;
+    }
+
     .welcome-card {
       width: 100%;
       background: rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: var(--radius-2xl);
-     padding: 32px 24px 24px;
+      padding: 32px 24px 24px;
       box-shadow:
         0 8px 32px rgba(13, 43, 30, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.35);
@@ -102,7 +94,6 @@
       align-items: center;
     }
 
-    /* Label floating nomor meja */
     .meja-field {
       position: relative;
       margin-bottom: -10px;
@@ -121,83 +112,67 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color:#ffff;
+      color: #ffff;
       line-height: 20px;
       border-radius: var(--radius-full);
       z-index: 1;
     }
 
-.meja-input-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
+    .meja-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
     .meja-input-wrap:focus-within {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.15);
     }
 
-.meja-input-icon {
-  position: absolute;
-  left: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  color: var(--color-on-surface-variant);
-  z-index: 2;
-}
+    .meja-input-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      color: var(--color-on-surface-variant);
+      z-index: 2;
+    }
 
-.meja-input-icon .material-symbols-outlined {
-  font-size: 20px;
-}
+    .meja-input-icon .material-symbols-outlined { font-size: 20px; }
 
+    .meja-input {
+      width: 100%;
+      height: 62px;
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-lg);
+      background: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 0.08em;
+      color: var(--color-on-surface);
+      caret-color: var(--color-primary);
+      padding: 0;
+    }
 
-  .meja-input {
-  width: 100%;
-  height: 62px;
-  border: 2px solid var(--color-primary);
-  border-radius: var(--radius-lg);
-  background: transparent;
-
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 34px;
-  font-weight: 800;
-
-  text-align: center;
-  letter-spacing: 0.08em;
-
-  color: var(--color-on-surface);
-  caret-color: var(--color-primary);
-
-  padding: 0;
-}
-
-.meja-input::placeholder {
-  color: rgba(0,0,0,.35);
-  font-weight: 800;
-}
-
+    .meja-input::placeholder { color: rgba(0,0,0,.35); font-weight: 800; }
     .meja-input::-webkit-inner-spin-button,
     .meja-input::-webkit-outer-spin-button { -webkit-appearance: none; }
     .meja-input[type=number] { -moz-appearance: textfield; }
 
-    .meja-input:not(:placeholder-shown) {
-      color: var(--color-on-surface);
-    }
-
-    /* Error */
     .error-msg {
       font-size: 12px;
       color: var(--color-error);
       font-weight: 600;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
       min-height: 16px;
       margin-top: 10px;
       text-align: center;
@@ -207,16 +182,10 @@
     }
     .error-msg.visible { opacity: 1; }
 
-    /* Tombol Mulai Memesan */
     .btn-mulai {
       width: 100%;
       height: 56px;
-        background: linear-gradient(
-    135deg,
-    var(--color-primary-dark) 0%,
-    var(--color-primary) 50%,
-    var(--color-primary-mid) 100%
-  );
+      background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-mid) 100%);
       color: #ffff;
       border: none;
       border-radius: var(--radius-xl);
@@ -230,43 +199,23 @@
       justify-content: center;
       gap: 10px;
       box-shadow: 0 4px 20px rgba(13, 43, 30, 0.45);
-      transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      transition: transform 0.1s ease, box-shadow 0.15s ease;
     }
 
     .btn-mulai:hover {
-        background: linear-gradient(
-    135deg,
-    var(--color-primary-dark) 0%,
-    var(--color-primary) 50%,
-    var(--color-primary-mid) 100%
-  );
       box-shadow: 0 8px 28px rgba(13, 43, 30, 0.55);
       transform: translateY(-1px);
     }
 
-    .btn-mulai:active {
-      transform: scale(0.97);
-      box-shadow: var(--shadow-md);
-    }
+    .btn-mulai:active { transform: scale(0.97); }
 
-    .btn-mulai .material-symbols-outlined {
-      font-size: 20px;
-      transition: transform 0.2s ease;
-    }
-
-    .btn-mulai:hover .arrow-icon {
-      transform: translateX(4px);
-    }
+    .btn-mulai .material-symbols-outlined { font-size: 20px; transition: transform 0.2s ease; }
+    .btn-mulai:hover .arrow-icon { transform: translateX(4px); }
 
     .btn-mulai.loading .btn-text { display: none; }
     .btn-mulai.loading .btn-spinner { display: flex !important; }
-    .btn-spinner {
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
+    .btn-spinner { display: none; align-items: center; gap: 8px; }
 
-    /* Help text */
     .welcome-help {
       margin-top: 20px;
       display: flex;
@@ -276,37 +225,22 @@
       color: var(--color-primary);
     }
 
-    .welcome-help .material-symbols-outlined {
-      font-size: 16px;
-      color: var(--color-primary);
-    }
+    .welcome-help .material-symbols-outlined { font-size: 16px; color: var(--color-primary); }
   </style>
 </head>
 
 <body>
-
-  <!-- Background image — ganti src sesuai path file kamu -->
   <img class="welcome-bg" src="assets/background.png" alt="" aria-hidden="true">
 
   <div class="welcome-wrapper">
+    <img class="welcome-logo" src="assets/logo-teja.svg" alt="Logo">
 
-    <!-- Logo — ganti src sesuai path logo kamu -->
-    <img
-      class="welcome-logo"
-      src="assets/logo-teja.svg"
-      alt="Logo"
-    >
-
-    <!-- Heading -->
     <h1 class="welcome-title">Selamat Datang</h1>
     <p class="welcome-desc">
-  Pesan makanan dan minuman favorit Anda langsung dari meja tanpa perlu antre di kasir.
-</p>
+      Pesan makanan dan minuman favorit Anda langsung dari meja tanpa perlu antre di kasir.
+    </p>
 
-    <!-- Card -->
     <div class="welcome-card">
-
-      <!-- Input Nomor Meja -->
       <div class="meja-field">
         <span class="meja-label">Nomor Meja</span>
         <div class="meja-input-wrap">
@@ -327,10 +261,8 @@
         </div>
       </div>
 
-      <!-- Error -->
       <p class="error-msg" id="error-msg" role="alert"></p>
 
-      <!-- Tombol -->
       <button class="btn-mulai" id="btn-mulai" type="button">
         <span class="btn-text" style="display:flex;align-items:center;gap:10px;">
           Mulai Pesanan
@@ -340,15 +272,13 @@
           <span class="material-symbols-outlined animate-spin" style="font-size:20px">progress_activity</span>
         </span>
       </button>
-    <!-- Help -->
-    <p class="welcome-help">
-      <span class="material-symbols-outlined">support_agent</span>
-      Butuh bantuan? Silakan panggil pelayan
-    </p>
+
+      <p class="welcome-help">
+        <span class="material-symbols-outlined">support_agent</span>
+        Butuh bantuan? Silakan panggil pelayan
+      </p>
     </div>
-
   </div>
-
 
   <script>
     const input  = document.getElementById('nomor-meja');
@@ -365,17 +295,10 @@
       errMsg.classList.add('visible');
     }
 
-    function hideError() {
-      errMsg.classList.remove('visible');
-    }
+    function hideError() { errMsg.classList.remove('visible'); }
 
-    input.addEventListener('input', () => {
-      if (isValid()) hideError();
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') btn.click();
-    });
+    input.addEventListener('input', () => { if (isValid()) hideError(); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') btn.click(); });
 
     btn.addEventListener('click', () => {
       if (!isValid()) {
@@ -388,11 +311,17 @@
       btn.classList.add('loading');
       btn.disabled = true;
 
+      // ── Simpan nomor meja ke sessionStorage ──
+      const nomorMeja = parseInt(input.value, 10);
+      sessionStorage.setItem('urbandine_meja', nomorMeja);
+
+      // ── Reset keranjang untuk sesi baru ──
+      localStorage.removeItem('urbandine_cart');
+
       setTimeout(() => {
-        window.location.href = 'index.html?meja=' + parseInt(input.value, 10);
+        window.location.href = 'index.html';
       }, 700);
     });
   </script>
-
 </body>
 </html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanDine — Pembayaran</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style/styling.css">
+
+  <style>
+    body { padding-bottom: 120px; }
+
+    .checkout-section { margin-bottom: 28px; }
+
+    .checkout-section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      letter-spacing: -0.005em;
+      margin-bottom: 14px;
+    }
+
+    /* ── Order item card ── */
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-outline-variant);
+      margin-bottom: 10px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .order-item.removing {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    /* Gambar item */
+    .order-item__img {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      flex-shrink: 0;
+      background-color: var(--color-surface-container);
+    }
+
+    .order-item__img-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-lg);
+      background-color: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .order-item__img-placeholder .material-symbols-outlined {
+      font-size: 26px;
+      color: var(--color-primary);
+    }
+
+    .order-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .order-item__name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      letter-spacing: -0.005em;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .order-item__meta {
+      font-size: 12px;
+      color: var(--color-on-surface-muted);
+      font-weight: 500;
+    }
+
+    .order-item__price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+
+    /* Tombol hapus */
+    .order-item__delete {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      border: none;
+      background-color: var(--color-error-container);
+      color: var(--color-error);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .order-item__delete:hover {
+      background-color: var(--color-error);
+      color: #fff;
+    }
+
+    .order-item__delete:active { transform: scale(0.88); }
+
+    .order-item__delete .material-symbols-outlined { font-size: 17px; }
+
+    /* ── Empty cart ── */
+    .order-empty {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-outline-variant);
+    }
+
+    .order-empty .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--color-outline);
+      margin-bottom: 10px;
+    }
+
+    .order-empty p {
+      font-size: 14px;
+      color: var(--color-on-surface-muted);
+    }
+
+    /* ── Payment method ── */
+    .payment-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--color-outline-variant);
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: border-color 0.18s ease, background-color 0.18s ease;
+    }
+
+    .payment-option:hover {
+      border-color: var(--color-primary);
+      background-color: var(--color-surface-container-low);
+    }
+
+    .payment-option:has(input:checked) {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-container);
+    }
+
+    .payment-option__left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .payment-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      flex-shrink: 0;
+      transition: background-color 0.15s ease;
+    }
+
+    .payment-option:has(input:checked) .payment-icon {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    .payment-icon .material-symbols-outlined { font-size: 20px; }
+
+    .payment-option__name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-on-surface);
+    }
+
+    .payment-option input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--color-outline);
+      background-color: var(--color-surface);
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .payment-option input[type="radio"]:checked {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary);
+    }
+
+    .payment-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+
+    /* ── Billing summary ── */
+    .billing-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-outline-variant);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .billing-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--color-on-surface-variant);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .billing-row .value     { font-weight: 600; color: var(--color-on-surface); }
+    .billing-row .value-accent { font-weight: 600; color: var(--color-accent); }
+
+    .billing-divider {
+      border: none;
+      border-top: 1px solid var(--color-outline-variant);
+      margin: 14px 0;
+    }
+
+    .billing-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .billing-total-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+    }
+
+    .billing-total-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Floating bottom bar ── */
+    #checkout-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 448px;
+      z-index: 50;
+      background-color: rgba(245, 240, 232, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--color-outline-variant);
+      box-shadow: 0 -4px 24px rgba(27,58,45,0.10);
+      padding: 14px var(--spacing-margin-mobile) 20px;
+    }
+
+    .btn-bayar {
+      width: 100%;
+      height: 56px;
+      background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-mid) 100%);
+      color: var(--color-on-primary);
+      border: none;
+      border-radius: var(--radius-xl);
+      font-family: var(--font-base);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.1s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-bayar:hover  { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-bayar:active { transform: scale(0.97); }
+
+    .btn-bayar .material-symbols-outlined { font-size: 20px; }
+
+    .btn-bayar.loading,
+    .btn-bayar.success { pointer-events: none; }
+
+    .btn-bayar .btn-default         { display: flex; align-items: center; gap: 10px; }
+    .btn-bayar .btn-loading         { display: none; align-items: center; gap: 8px; }
+    .btn-bayar .btn-success-content { display: none; align-items: center; gap: 8px; }
+
+    .btn-bayar.loading  .btn-default          { display: none; }
+    .btn-bayar.loading  .btn-loading          { display: flex; }
+    .btn-bayar.success  .btn-default          { display: none; }
+    .btn-bayar.success  .btn-success-content  { display: flex; }
+
+    /* ── Success modal ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: rgba(13, 43, 30, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-backdrop.visible { display: flex; }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 448px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      padding: 32px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    @keyframes slide-up {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+
+    .modal-icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-icon-wrap .material-symbols-outlined {
+      font-size: 44px;
+      color: var(--color-primary);
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--color-on-surface-variant);
+      max-width: 300px;
+      margin-bottom: 28px;
+    }
+
+    .btn-selesai {
+      width: 100%;
+      height: 52px;
+      border: 2px solid var(--color-primary);
+      background-color: transparent;
+      color: var(--color-primary);
+      border-radius: var(--radius-xl);
+      font-family: var(--font-base);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-selesai:hover {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="site-header">
+    <div class="header-inner">
+      <button class="btn-profile" onclick="history.back()" aria-label="Kembali">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <div class="header-brand">
+        <h1 style="font-family:var(--font-base);font-size:17px;font-weight:700;color:var(--color-on-surface);letter-spacing:-.005em;">
+          Pembayaran
+        </h1>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:6px;background-color:var(--color-primary-container);padding:6px 12px;border-radius:var(--radius-full);border:1px solid var(--color-outline-variant);">
+        <span class="material-symbols-outlined" style="font-size:16px;color:var(--color-primary);">table_restaurant</span>
+        <span id="label-meja" style="font-size:12px;font-weight:700;color:var(--color-primary);letter-spacing:0.04em;">MEJA —</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="page-container">
+
+    <!-- Pesanan Anda -->
+    <div class="checkout-section">
+      <h2 class="checkout-section-title">Pesanan Anda</h2>
+      <div id="order-list"></div>
+      <div class="order-empty" id="order-empty">
+        <span class="material-symbols-outlined">shopping_cart_off</span>
+        <p>Keranjang masih kosong.</p>
+      </div>
+    </div>
+
+    <!-- Metode Pembayaran -->
+    <div class="checkout-section">
+      <h2 class="checkout-section-title">Metode Pembayaran</h2>
+
+      <label class="payment-option">
+        <div class="payment-option__left">
+          <div class="payment-icon"><span class="material-symbols-outlined">payments</span></div>
+          <span class="payment-option__name">Tunai di Kasir</span>
+        </div>
+        <input type="radio" name="payment" checked>
+      </label>
+
+      <label class="payment-option">
+        <div class="payment-option__left">
+          <div class="payment-icon"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+          <span class="payment-option__name">OVO / Gopay</span>
+        </div>
+        <input type="radio" name="payment">
+      </label>
+
+      <label class="payment-option">
+        <div class="payment-option__left">
+          <div class="payment-icon"><span class="material-symbols-outlined">account_balance</span></div>
+          <span class="payment-option__name">Transfer Bank</span>
+        </div>
+        <input type="radio" name="payment">
+      </label>
+    </div>
+
+    <!-- Billing -->
+    <div class="checkout-section">
+      <div class="billing-card">
+        <div class="billing-row">
+          <span>Subtotal</span>
+          <span class="value" id="bill-subtotal">Rp 0</span>
+        </div>
+        <div class="billing-row">
+          <span>Pajak (10%)</span>
+          <span class="value" id="bill-tax">Rp 0</span>
+        </div>
+        <div class="billing-row">
+          <span>Biaya Layanan</span>
+          <span class="value-accent">Rp 10.000</span>
+        </div>
+        <hr class="billing-divider">
+        <div class="billing-total-row">
+          <span class="billing-total-label">Total Pembayaran</span>
+          <span class="billing-total-value" id="bill-total">Rp 0</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM BAR -->
+  <div id="checkout-bottom-bar">
+    <button class="btn-bayar" id="btn-bayar" type="button">
+      <span class="btn-default">
+        Bayar Sekarang
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </span>
+      <span class="btn-loading">
+        <span class="material-symbols-outlined animate-spin" style="font-size:20px;">progress_activity</span>
+        Memproses...
+      </span>
+      <span class="btn-success-content">
+        <span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>
+        Pembayaran Berhasil
+      </span>
+    </button>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal-sheet">
+      <div class="modal-icon-wrap">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <h3 class="modal-title">Pesanan Berhasil!</h3>
+      <p class="modal-desc" id="modal-desc">
+        Pesanan Anda sedang diproses. Silakan tunjukkan layar ini ke kasir atau tunggu pelayan kami.
+      </p>
+      <button class="btn-selesai" id="btn-selesai">Selesai</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Nomor meja ──────────────────────────────────────────────
+    const nomorMeja = sessionStorage.getItem('urbandine_meja') || '—';
+    document.getElementById('label-meja').textContent = 'MEJA ' + nomorMeja;
+    document.getElementById('modal-desc').textContent =
+      `Pesanan Anda sedang diproses. Silakan tunjukkan layar ini ke kasir atau tunggu pelayan kami di Meja ${nomorMeja}.`;
+
+    // ── Cart ────────────────────────────────────────────────────
+    function loadCart() {
+      try { return JSON.parse(localStorage.getItem('urbandine_cart')) || {}; }
+      catch { return {}; }
+    }
+
+    function saveCart(data) {
+      localStorage.setItem('urbandine_cart', JSON.stringify(data));
+    }
+
+    function formatRupiah(n) {
+      return 'Rp ' + parseInt(n).toLocaleString('id-ID');
+    }
+
+    const SERVICE_FEE = 10000;
+    const TAX_RATE    = 0.10;
+
+    function updateBilling(subtotal) {
+      const tax   = Math.round(subtotal * TAX_RATE);
+      const total = subtotal + tax + SERVICE_FEE;
+      document.getElementById('bill-subtotal').textContent = formatRupiah(subtotal);
+      document.getElementById('bill-tax').textContent      = formatRupiah(tax);
+      document.getElementById('bill-total').textContent    = formatRupiah(total);
+    }
+
+    function renderOrder() {
+      const cart  = loadCart();
+      const keys  = Object.keys(cart);
+      const list  = document.getElementById('order-list');
+      const empty = document.getElementById('order-empty');
+
+      list.innerHTML = '';
+
+      if (keys.length === 0) {
+        empty.style.display = 'flex';
+        updateBilling(0);
+        return;
+      }
+
+      empty.style.display = 'none';
+      let subtotal = 0;
+
+      keys.forEach(nama => {
+        const item  = cart[nama];
+        const total = item.harga * item.qty;
+        subtotal   += total;
+
+        const el = document.createElement('div');
+        el.className = 'order-item';
+
+        // Gambar: pakai img dari cart, fallback ke placeholder
+        const imgHTML = item.img
+          ? `<img class="order-item__img" src="${decodeURIComponent(item.img)}" alt="${nama}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+             <div class="order-item__img-placeholder" style="display:none;">
+               <span class="material-symbols-outlined">fastfood</span>
+             </div>`
+          : `<div class="order-item__img-placeholder">
+               <span class="material-symbols-outlined">fastfood</span>
+             </div>`;
+
+        el.innerHTML = `
+          ${imgHTML}
+          <div class="order-item__info">
+            <p class="order-item__name">${nama}</p>
+            <p class="order-item__meta">${item.qty}x &bull; ${formatRupiah(item.harga)} / item</p>
+          </div>
+          <span class="order-item__price">${formatRupiah(total)}</span>
+          <button class="order-item__delete" data-nama="${nama}" aria-label="Hapus ${nama}">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        `;
+
+        // Tombol hapus
+        el.querySelector('.order-item__delete').addEventListener('click', function () {
+          const key = this.dataset.nama;
+          el.classList.add('removing');
+          setTimeout(() => {
+            const data = loadCart();
+            delete data[key];
+            saveCart(data);
+            renderOrder();
+          }, 250);
+        });
+
+        list.appendChild(el);
+      });
+
+      updateBilling(subtotal);
+    }
+
+    renderOrder();
+
+    // ── Tombol Bayar ────────────────────────────────────────────
+    const btnBayar = document.getElementById('btn-bayar');
+    const modal    = document.getElementById('modal-backdrop');
+
+    btnBayar.addEventListener('click', () => {
+      const cart = loadCart();
+      if (Object.keys(cart).length === 0) return;
+
+      btnBayar.classList.add('loading');
+      btnBayar.disabled = true;
+
+      setTimeout(() => {
+        btnBayar.classList.remove('loading');
+        modal.classList.add('visible');
+      }, 1500);
+    });
+
+    // ── Tombol Selesai ──────────────────────────────────────────
+    document.getElementById('btn-selesai').addEventListener('click', () => {
+      modal.classList.remove('visible');
+      localStorage.removeItem('urbandine_cart');
+      window.location.href = 'welcome.html';
+    });
+  </script>
+
+</body>
+</html>
