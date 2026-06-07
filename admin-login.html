@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Kasir — TEJA Coffee & Eatery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green-dark: #1B3A2D;
+      --green-mid:  #234D38;
+      --green-light:#2E6045;
+      --cream:      #F5F0E8;
+      --surface:    #FFFFFF;
+      --outline:    #DDD8D0;
+      --muted:      #9A948E;
+      --error:      #C0392B;
+      --radius-lg:  16px;
+      --radius-xl:  20px;
+      --radius-full:9999px;
+    }
+    body {
+      min-height: 100dvh;
+      background-color: var(--cream);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bg-decor {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-decor::before {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 380px; height: 380px;
+      background: var(--green-dark);
+      border-radius: 50%;
+      opacity: 0.08;
+    }
+    .bg-decor::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      background: var(--green-mid);
+      border-radius: 50%;
+      opacity: 0.07;
+    }
+    /* diagonal stripe accent */
+    .bg-stripe {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%; height: 220px;
+      background: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 18px,
+        rgba(27,58,45,0.04) 18px,
+        rgba(27,58,45,0.04) 20px
+      );
+      pointer-events: none; z-index: 0;
+    }
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 24px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Logo */
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 72px; height: 72px;
+      background: var(--green-dark);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 28px rgba(27,58,45,0.28);
+    }
+    .logo-icon svg { width: 40px; height: 40px; fill: #fff; }
+    .logo-brand {
+      font-size: 22px; font-weight: 800;
+      color: var(--green-dark); letter-spacing: -0.02em;
+    }
+    .logo-sub {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-top: 2px;
+    }
+    /* Title */
+    .page-title {
+      font-size: 28px; font-weight: 800;
+      color: var(--green-dark); letter-spacing: -0.02em;
+      text-align: center; margin-bottom: 6px;
+    }
+    .page-sub {
+      font-size: 14px; color: var(--muted);
+      text-align: center; line-height: 1.55;
+      margin-bottom: 32px;
+    }
+    /* Card */
+    .card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(27,58,45,0.10), 0 1px 4px rgba(27,58,45,0.06);
+      border: 1px solid var(--outline);
+    }
+    /* Field */
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 7px;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex; align-items: center;
+    }
+    .input-icon {
+      position: absolute; left: 14px;
+      display: flex; align-items: center;
+      color: var(--muted);
+    }
+    .input-icon .material-symbols-outlined { font-size: 20px; }
+    .input-wrap input {
+      width: 100%; height: 52px;
+      padding: 0 44px;
+      border: 1.5px solid var(--outline);
+      border-radius: var(--radius-lg);
+      background: #FAFAF9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px; font-weight: 500;
+      color: var(--green-dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-wrap input::placeholder { color: #BEB9B3; font-weight: 400; }
+    .input-wrap input:focus {
+      border-color: var(--green-dark);
+      box-shadow: 0 0 0 3px rgba(27,58,45,0.10);
+      background: #fff;
+    }
+    .input-wrap input[type="password"] { letter-spacing: 0.15em; }
+    .input-wrap input[type="password"]::placeholder { letter-spacing: 0; }
+    .btn-toggle-pw {
+      position: absolute; right: 14px;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); display: flex;
+      transition: color 0.15s;
+    }
+    .btn-toggle-pw:hover { color: var(--green-dark); }
+    .btn-toggle-pw .material-symbols-outlined { font-size: 20px; }
+    /* Forgot */
+    .forgot-row {
+      display: flex; justify-content: flex-end;
+      margin-bottom: 20px; margin-top: -6px;
+    }
+    .forgot-link {
+      font-size: 12px; font-weight: 700;
+      color: var(--green-light); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .forgot-link:hover { color: var(--green-dark); }
+    /* Error */
+    .error-msg {
+      background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: var(--radius-lg);
+      padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--error);
+      margin-bottom: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .error-msg.visible { opacity: 1; pointer-events: auto; }
+    .error-msg .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
+    /* Button */
+    .btn-login {
+      width: 100%; height: 52px;
+      background: linear-gradient(135deg, #0D2B1E 0%, #1B3A2D 50%, #234D38 100%);
+      color: #fff; border: none; border-radius: var(--radius-xl);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.01em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(13,43,30,0.40);
+      transition: transform 0.1s, box-shadow 0.15s;
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(13,43,30,0.50); }
+    .btn-login:active { transform: scale(0.97); }
+    .btn-login.loading { pointer-events: none; opacity: 0.85; }
+    .btn-login .material-symbols-outlined { font-size: 20px; }
+    .spin { animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Footer */
+    .footer-note {
+      margin-top: 24px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted); text-align: center;
+    }
+    .footer-note .material-symbols-outlined { font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="bg-decor"></div>
+  <div class="bg-stripe"></div>
+
+  <div class="wrapper">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <!-- Simple coffee cup SVG -->
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 14h18l-2 14H10L8 14z" fill="rgba(255,255,255,0.9)"/>
+          <path d="M26 16h4a3 3 0 010 6h-4" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M13 9c0-2 2-2 2-4M18 9c0-2 2-2 2-4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="7" y="28" width="20" height="2.5" rx="1.25" fill="rgba(255,255,255,0.6)"/>
+        </svg>
+      </div>
+      <div class="logo-brand">TEJA</div>
+      <div class="logo-sub">Coffee &amp; Eatery</div>
+    </div>
+
+    <h1 class="page-title">Selamat Datang</h1>
+    <p class="page-sub">Pantau aktivitas penjualan dan<br>operasional TEJA coffe &amp; Eatery di sini.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="cashier-id">Cashier ID</label>
+        <div class="input-wrap">
+          <span class="input-icon"><span class="material-symbols-outlined">badge</span></span>
+          <input type="text" id="cashier-id" placeholder="Enter your employee ID" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pin">Security PIN</label>
+        <div class="input-wrap">
+          <span class="input-icon"><span class="material-symbols-outlined">lock</span></span>
+          <input type="password" id="pin" placeholder="••••••" maxlength="6" inputmode="numeric" autocomplete="current-password">
+          <button class="btn-toggle-pw" id="btn-toggle-pw" type="button" aria-label="Tampilkan PIN">
+            <span class="material-symbols-outlined" id="pw-icon">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" class="forgot-link">Lupa Password?</a>
+      </div>
+
+      <div class="error-msg" id="error-msg" role="alert">
+        <span class="material-symbols-outlined">error</span>
+        <span id="error-text">ID atau PIN salah. Coba lagi.</span>
+      </div>
+
+      <button class="btn-login" id="btn-login" type="button">
+        <span id="btn-content" style="display:flex;align-items:center;gap:10px;">
+          Masuk
+          <span class="material-symbols-outlined">login</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="footer-note">
+      <span class="material-symbols-outlined">shield</span>
+      Akses terbatas untuk karyawan TEJA
+    </div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    const pinInput = document.getElementById('pin');
+    const pwIcon   = document.getElementById('pw-icon');
+    document.getElementById('btn-toggle-pw').addEventListener('click', () => {
+      const show = pinInput.type === 'password';
+      pinInput.type = show ? 'text' : 'password';
+      pwIcon.textContent = show ? 'visibility_off' : 'visibility';
+    });
+
+    // Login logic (demo credentials)
+    const DEMO_USERS = { 'KSR001': '123456', 'KSR002': '654321', 'ADMIN': '000000' };
+
+    document.getElementById('btn-login').addEventListener('click', function () {
+      const id  = document.getElementById('cashier-id').value.trim().toUpperCase();
+      const pin = document.getElementById('pin').value.trim();
+      const err = document.getElementById('error-msg');
+
+      err.classList.remove('visible');
+
+      if (!id || !pin) {
+        document.getElementById('error-text').textContent = 'Harap isi Cashier ID dan PIN.';
+        err.classList.add('visible');
+        return;
+      }
+
+      // Loading state
+      this.classList.add('loading');
+      this.innerHTML = '<span class="material-symbols-outlined spin">progress_activity</span>';
+
+      setTimeout(() => {
+        if (DEMO_USERS[id] && DEMO_USERS[id] === pin) {
+          sessionStorage.setItem('teja_cashier', id);
+          window.location.href = 'admin-pesanan.html';
+        } else {
+          document.getElementById('error-text').textContent = 'ID atau PIN salah. Coba lagi.';
+          err.classList.add('visible');
+          this.classList.remove('loading');
+          this.innerHTML = '<span id="btn-content" style="display:flex;align-items:center;gap:10px;">Masuk <span class="material-symbols-outlined">login</span></span>';
+        }
+      }, 900);
+    });
+
+    // Enter key
+    document.getElementById('pin').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    });
+    document.getElementById('cashier-id').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('pin').focus();
+    });
+  </script>
+</body>
+</html>

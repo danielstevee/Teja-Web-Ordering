@@ -759,6 +759,8 @@
   <!-- ============================================================
        SCRIPTS
        ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="cart.js"></script>
  
   <script>
@@ -767,17 +769,19 @@
        ---------------------------------------------------------- */
     const TABLE_KEY   = 'urbandine_table';
     const ORDER_KEY   = 'urbandine_order_id';
+    let CURRENT_ORDER = null;
  
     function getTableNumber()  { return localStorage.getItem(TABLE_KEY) || ''; }
     function setTableNumber(n) { localStorage.setItem(TABLE_KEY, n); }
  
-    function getOrderId() {
+    function getOrderId(tableNo) {
       let id = localStorage.getItem(ORDER_KEY);
       if (!id) {
-        /* Generate sederhana: UD-[tahun][random 4 digit] */
-        const year   = new Date().getFullYear();
-        const rand   = Math.floor(1000 + Math.random() * 9000);
-        id = `UD-${year}-${rand}`;
+        /* Generate: UD-{nomerMeja}-{tahun}-{random 4 digit} */
+        const meja = tableNo || getTableNumber() || '0';
+        const year = new Date().getFullYear();
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        id = `UD-${String(meja).padStart(2, '0')}-${year}-${rand}`;
         localStorage.setItem(ORDER_KEY, id);
       }
       return id;
@@ -786,7 +790,7 @@
     /* ----------------------------------------------------------
        RENDER ORDER PAGE
        ---------------------------------------------------------- */
-    function renderOrderPage(tableNo) {
+    async function renderOrderPage(tableNo) {
       /* Sembunyikan screen meja, tampilkan page order */
       document.getElementById('screen-table').style.display = 'none';
       const page = document.getElementById('page-order');
@@ -795,21 +799,68 @@
       /* Update header label */
       document.getElementById('header-table-label').textContent = `Meja ${tableNo}`;
  
-      /* Update Order ID */
-      const orderId = getOrderId();
+      /* Update Order ID — sertakan nomor meja agar format lengkap */
+      const orderId = getOrderId(tableNo);
       document.getElementById('display-order-id').textContent = `#${orderId}`;
+      CURRENT_ORDER = await TejaSupabase.getOrder(orderId);
  
       /* Timestamp step 1 */
       const now = new Date();
       const hh  = String(now.getHours()).padStart(2, '0');
       const mm  = String(now.getMinutes()).padStart(2, '0');
       document.getElementById('step1-time').textContent = `${hh}:${mm}`;
+      applyOrderStatus(CURRENT_ORDER);
  
       /* Render menu dari Cart */
       renderMenuList();
  
       /* Init FAB dari cart.js */
       Cart.init();
+    }
+
+    function setStep(step, state) {
+      const row = document.querySelectorAll('.step-row')[step - 1];
+      if (!row) return;
+      const icon = row.querySelector('.step-icon-wrap');
+      const connector = row.querySelector('.step-connector');
+      const title = row.querySelector('.step-title');
+      const desc = row.querySelector('.step-desc');
+
+      icon.classList.remove('is-done', 'is-active', 'is-pending');
+      icon.classList.add(`is-${state}`);
+      if (connector) {
+        connector.classList.toggle('is-done', state === 'done');
+        connector.classList.toggle('is-pending', state !== 'done');
+      }
+      [title, desc].forEach(el => {
+        if (el) el.classList.toggle('is-pending', state === 'pending');
+      });
+    }
+
+    function applyOrderStatus(order) {
+      const status = order?.orderStatus || 'baru';
+      const eta = document.querySelector('.eta-value');
+
+      setStep(1, 'done');
+      setStep(2, status === 'baru' ? 'pending' : ['diproses'].includes(status) ? 'active' : 'done');
+      setStep(3, ['siap'].includes(status) ? 'active' : ['selesai'].includes(status) ? 'done' : 'pending');
+      setStep(4, status === 'selesai' ? 'done' : 'pending');
+
+      if (eta) {
+        if (status === 'baru') eta.textContent = 'Menunggu konfirmasi admin';
+        if (status === 'diproses') eta.textContent = '12 - 15 Menit';
+        if (status === 'siap') eta.textContent = 'Siap disajikan';
+        if (status === 'selesai') eta.textContent = 'Selesai';
+        if (status === 'ditolak') eta.textContent = 'Pesanan ditolak';
+      }
+    }
+
+    async function refreshCurrentOrder() {
+      const orderId = localStorage.getItem(ORDER_KEY);
+      if (!orderId) return;
+      CURRENT_ORDER = await TejaSupabase.getOrder(orderId);
+      applyOrderStatus(CURRENT_ORDER);
+      renderMenuList();
     }
  
     /* ----------------------------------------------------------
@@ -822,7 +873,15 @@
       // Prioritas: snapshot dari checkout → cart aktif (jika datang dari luar checkout)
       let items = {};
       const snapshotRaw = localStorage.getItem('urbandine_order_snapshot');
-      if (snapshotRaw) {
+      if (CURRENT_ORDER?.items?.length) {
+        CURRENT_ORDER.items.forEach(item => {
+          items[item.name] = {
+            qty: Number(item.qty || 0),
+            harga: Number(item.price || 0),
+            img: item.img || ''
+          };
+        });
+      } else if (snapshotRaw) {
         try { items = JSON.parse(snapshotRaw); } catch {}
       }
       if (!Object.keys(items).length) {
@@ -917,6 +976,15 @@
       setTableNumber(tableNo);
       renderOrderPage(tableNo);
     });
+
+    TejaSupabase.subscribe((orders) => {
+      const orderId = localStorage.getItem(ORDER_KEY);
+      if (!orderId) return;
+      CURRENT_ORDER = orders.find(order => order.id === orderId) || CURRENT_ORDER;
+      applyOrderStatus(CURRENT_ORDER);
+      renderMenuList();
+    });
+    setInterval(refreshCurrentOrder, 10000);
  
     /* Enter key di input */
     document.getElementById('input-table').addEventListener('keydown', function (e) {

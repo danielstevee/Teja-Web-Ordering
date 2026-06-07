@@ -541,6 +541,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script>
     // ── Nomor meja ──────────────────────────────────────────────
     const nomorMeja = sessionStorage.getItem('urbandine_meja') || '—';
@@ -644,14 +646,23 @@
     const btnBayar = document.getElementById('btn-bayar');
     const modal    = document.getElementById('modal-backdrop');
 
-    btnBayar.addEventListener('click', () => {
+    function cartToOrderItems(cart) {
+      return Object.entries(cart).map(([name, item]) => ({
+        name,
+        qty: Number(item.qty || 0),
+        price: Number(item.harga || 0),
+        img: item.img || ''
+      }));
+    }
+
+    btnBayar.addEventListener('click', async () => {
       const cart = loadCart();
       if (Object.keys(cart).length === 0) return;
 
       btnBayar.classList.add('loading');
       btnBayar.disabled = true;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         btnBayar.classList.remove('loading');
 
         // Hitung total untuk disimpan ke snapshot
@@ -664,6 +675,7 @@
           ?.closest('.payment-option')
           ?.querySelector('.payment-option__name')
           ?.textContent?.trim() || '—';
+        const paymentCode = TejaSupabase.paymentToCode(selectedPayment);
 
         // Generate Order ID baru
         const year    = new Date().getFullYear();
@@ -674,14 +686,37 @@
         const meja = sessionStorage.getItem('urbandine_meja') || localStorage.getItem('urbandine_table') || '';
         if (meja) localStorage.setItem('urbandine_table', meja);
 
-        // Simpan semua data pesanan ke localStorage
-        localStorage.setItem('urbandine_order_id',       orderId);
-        localStorage.setItem('urbandine_order_snapshot', JSON.stringify(cart));
-        localStorage.setItem('urbandine_order_total',    String(grandTotal));
-        localStorage.setItem('urbandine_order_payment',  selectedPayment);
-        localStorage.setItem('urbandine_order_time',     new Date().toISOString());
+        const createdAt = new Date().toISOString();
+        const order = {
+          id: orderId,
+          meja,
+          customer: `Meja ${meja || '—'}`,
+          payment: paymentCode,
+          payStatus: paymentCode === 'cash' ? 'pending' : 'paid',
+          orderStatus: 'baru',
+          items: cartToOrderItems(cart),
+          note: '',
+          total: grandTotal,
+          createdAt,
+          updatedAt: createdAt
+        };
 
-        modal.classList.add('visible');
+        try {
+          await TejaSupabase.createOrder(order);
+
+          // Simpan semua data pesanan ke localStorage untuk halaman status di perangkat pembeli
+          localStorage.setItem('urbandine_order_id',       orderId);
+          localStorage.setItem('urbandine_order_snapshot', JSON.stringify(cart));
+          localStorage.setItem('urbandine_order_total',    String(grandTotal));
+          localStorage.setItem('urbandine_order_payment',  selectedPayment);
+          localStorage.setItem('urbandine_order_time',     createdAt);
+
+          modal.classList.add('visible');
+        } catch (error) {
+          console.error(error);
+          alert('Pesanan gagal dikirim ke admin. Periksa konfigurasi Supabase lalu coba lagi.');
+          btnBayar.disabled = false;
+        }
       }, 1500);
     });
 

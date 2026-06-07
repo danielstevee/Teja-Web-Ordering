@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat & Pendapatan — TEJA Kasir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style/admin-shared.css">
+  <style>
+    /* Revenue card */
+    .revenue-card {
+      background: linear-gradient(135deg, var(--green-darker) 0%, var(--green-dark) 60%, var(--green-mid) 100%);
+      border-radius: var(--radius-2xl);
+      padding: 22px 20px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 28px rgba(27,58,45,0.30);
+      color: #fff;
+    }
+    .revenue-label {
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); margin-bottom: 6px;
+    }
+    .revenue-amount {
+      font-size: 36px; font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .revenue-amount span { font-size: 20px; font-weight: 700; opacity: 0.7; margin-right: 4px; }
+    .revenue-stats {
+      display: flex; align-items: center; gap: 0;
+    }
+    .revenue-stat { flex: 1; }
+    .revenue-stat-value {
+      font-size: 15px; font-weight: 800; color: #fff;
+    }
+    .revenue-stat-label {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.50); margin-top: 2px;
+    }
+    .revenue-divider {
+      width: 1px; height: 36px; background: rgba(255,255,255,0.15); margin: 0 16px;
+    }
+    .trend-up {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 700; color: #6EE7B7;
+    }
+    .trend-up .material-symbols-outlined { font-size: 16px; }
+
+    /* Date filter & download */
+    .filter-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--outline);
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .date-input-wrap {
+      position: relative; margin-bottom: 12px;
+    }
+    .date-input {
+      width: 100%; height: 46px;
+      border: 1.5px solid var(--outline);
+      border-radius: var(--radius-lg);
+      background: var(--surface-low);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 600;
+      color: var(--on-surface);
+      padding: 0 44px 0 14px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .date-input:focus { border-color: var(--green-dark); }
+    .date-icon {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted);
+    }
+    .date-icon .material-symbols-outlined { font-size: 20px; }
+    .btn-download {
+      width: 100%; height: 46px;
+      background: var(--green-dark); color: #fff;
+      border: none; border-radius: var(--radius-lg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-download:hover { background: var(--green-mid); }
+    .btn-download:active { transform: scale(0.97); }
+    .btn-download .material-symbols-outlined { font-size: 18px; }
+
+    /* Transaction list */
+    .trx-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .trx-title {
+      font-size: 18px; font-weight: 800;
+      color: var(--green-dark); letter-spacing: -0.01em;
+    }
+
+    /* Payment filter chips */
+    .pay-filter-chips {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .pay-chip {
+      padding: 5px 14px; border-radius: var(--radius-full);
+      border: 1.5px solid var(--outline);
+      background: var(--surface); color: var(--on-variant);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .pay-chip.active { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+
+    /* Transaction card */
+    .trx-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--outline);
+      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      transition: box-shadow 0.15s;
+    }
+    .trx-card:hover { box-shadow: var(--shadow-md); }
+    .trx-icon {
+      width: 44px; height: 44px;
+      background: var(--green-container);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .trx-icon .material-symbols-outlined { font-size: 22px; color: var(--green-dark); }
+    .trx-info { flex: 1; min-width: 0; }
+    .trx-id {
+      font-size: 13px; font-weight: 800; color: var(--on-surface);
+      margin-bottom: 1px;
+    }
+    .trx-meta {
+      font-size: 11px; color: var(--muted);
+    }
+    .trx-right { text-align: right; flex-shrink: 0; }
+    .trx-amount {
+      font-size: 15px; font-weight: 800; color: var(--green-dark);
+    }
+    .trx-status {
+      font-size: 11px; font-weight: 700; color: #065F46;
+      margin-top: 2px;
+    }
+
+    /* Load more */
+    .btn-load-more {
+      width: 100%; height: 46px;
+      border: 1.5px solid var(--outline);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--on-variant);
+      cursor: pointer; margin-top: 4px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-load-more:hover { background: var(--surface-low); border-color: var(--green-dark); color: var(--green-dark); }
+  </style>
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="admin-header-left">
+      <div class="admin-logo">
+        <div class="admin-logo-icon">
+          <span class="material-symbols-outlined">local_cafe</span>
+        </div>
+        <div>
+          <div class="admin-logo-text">TEJA</div>
+          <div class="admin-logo-sub">Kasir</div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-header-right">
+      <div class="cashier-chip">
+        <span class="material-symbols-outlined">person</span>
+        <span id="cashier-name">KSR001</span>
+      </div>
+      <button class="btn-logout" onclick="window.location.href='admin-login.html'" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <div class="page-heading">
+      <h1>Riwayat &amp; Pendapatan</h1>
+      <p>Ringkasan performa penjualan hari ini.</p>
+    </div>
+
+    <!-- Revenue Card -->
+    <div class="revenue-card">
+      <div class="revenue-label">Total Pemasukan Hari Ini</div>
+      <div class="revenue-amount"><span>Rp</span>12.450.000</div>
+      <div class="revenue-stats">
+        <div class="revenue-stat">
+          <div class="trend-up">
+            <span class="material-symbols-outlined">trending_up</span>
+            +12.5% dari kemarin
+          </div>
+        </div>
+        <div class="revenue-divider"></div>
+        <div class="revenue-stat" style="text-align:right;">
+          <div class="revenue-stat-value">48 Transaksi</div>
+          <div class="revenue-stat-label">Berhasil</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Download -->
+    <div class="filter-card">
+      <div class="filter-label">Filter Tanggal</div>
+      <div class="date-input-wrap">
+        <input class="date-input" type="text" id="date-input" value="Hari Ini, 24 Okt 2023" readonly>
+        <div class="date-icon"><span class="material-symbols-outlined">calendar_month</span></div>
+      </div>
+      <button class="btn-download" onclick="showToast('CSV sedang diunduh...')">
+        <span class="material-symbols-outlined">download</span>
+        Unduh Laporan (CSV)
+      </button>
+    </div>
+
+    <!-- Transaction List -->
+    <div>
+      <div class="trx-header">
+        <span class="trx-title">Daftar Transaksi</span>
+      </div>
+      <div class="pay-filter-chips" style="margin-bottom:14px;">
+        <button class="pay-chip active" data-f="all">Semua</button>
+        <button class="pay-chip" data-f="tunai">Tunai</button>
+        <button class="pay-chip" data-f="qris">QRIS</button>
+      </div>
+      <div id="trx-list"></div>
+      <button class="btn-load-more" id="btn-load">Muat Lebih Banyak</button>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" style="
+    position:fixed;bottom:96px;left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--green-dark);color:#fff;
+    padding:10px 20px;border-radius:9999px;
+    font-size:13px;font-weight:700;
+    box-shadow:0 8px 24px rgba(27,58,45,0.35);
+    opacity:0;pointer-events:none;
+    transition:opacity 0.25s,transform 0.25s;
+    z-index:100;white-space:nowrap;
+  "></div>
+
+  <nav class="admin-nav">
+    <a href="admin-pesanan.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="admin-nav-label">Pesanan</span>
+    </a>
+    <a href="admin-aktif.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">local_fire_department</span>
+      <span class="admin-nav-label">Aktif</span>
+    </a>
+    <a href="admin-stok.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span class="admin-nav-label">Stok</span>
+    </a>
+    <a href="admin-riwayat.html" class="admin-nav-item active">
+      <span class="material-symbols-outlined">history</span>
+      <span class="admin-nav-label">Riwayat</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    let ALL_TRX = [];
+
+    let currentFilter = 'all';
+    let visibleCount  = 4;
+
+    function formatRupiah(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+      setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2200);
+    }
+
+    function renderTrx() {
+      const filtered = currentFilter === 'all'
+        ? ALL_TRX : ALL_TRX.filter(t => t.method === currentFilter);
+      const shown = filtered.slice(0, visibleCount);
+      const container = document.getElementById('trx-list');
+
+      if (!shown.length) {
+        container.innerHTML = `<div style="text-align:center;padding:44px 16px;color:var(--muted);">
+          <span class="material-symbols-outlined" style="font-size:46px;color:var(--outline);display:block;margin-bottom:10px;">history</span>
+          Belum ada transaksi selesai
+        </div>`;
+        document.getElementById('btn-load').style.display = 'none';
+        return;
+      }
+
+      container.innerHTML = shown.map(t => `
+        <div class="trx-card">
+          <div class="trx-icon">
+            <span class="material-symbols-outlined">receipt</span>
+          </div>
+          <div class="trx-info">
+            <div class="trx-id">${t.id} • ${t.meja}</div>
+            <div class="trx-meta">${t.time} • ${t.method === 'qris' ? 'QRIS' : 'Tunai'}</div>
+          </div>
+          <div class="trx-right">
+            <div class="trx-amount">${formatRupiah(t.amount)}</div>
+            <div class="trx-status">Sukses</div>
+          </div>
+        </div>`).join('');
+
+      const btn = document.getElementById('btn-load');
+      btn.style.display = shown.length < filtered.length ? 'block' : 'none';
+    }
+
+    // Payment filter
+    document.querySelectorAll('.pay-chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('.pay-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.dataset.f;
+        visibleCount  = 4;
+        renderTrx();
+      });
+    });
+
+    // Load more
+    document.getElementById('btn-load').addEventListener('click', () => {
+      visibleCount += 4;
+      renderTrx();
+    });
+
+    const cashierName = sessionStorage.getItem('teja_cashier') || 'KSR001';
+    document.getElementById('cashier-name').textContent = cashierName;
+
+    async function refreshTrx() {
+      const orders = await TejaSupabase.listOrders();
+      ALL_TRX = orders
+        .filter(order => order.orderStatus === 'selesai' || order.payStatus === 'paid')
+        .map(order => ({
+          id: `#${order.id}`,
+          meja: `Meja ${String(order.meja).padStart(2, '0')}`,
+          time: TejaSupabase.formatTime(order.createdAt),
+          method: order.payment === 'cash' ? 'tunai' : 'qris',
+          amount: order.total
+        }));
+      renderTrx();
+    }
+
+    refreshTrx();
+    TejaSupabase.subscribe((orders) => {
+      ALL_TRX = orders
+        .filter(order => order.orderStatus === 'selesai' || order.payStatus === 'paid')
+        .map(order => ({
+          id: `#${order.id}`,
+          meja: `Meja ${String(order.meja).padStart(2, '0')}`,
+          time: TejaSupabase.formatTime(order.createdAt),
+          method: order.payment === 'cash' ? 'tunai' : 'qris',
+          amount: order.total
+        }));
+      renderTrx();
+    });
+  </script>
+</body>
+</html>

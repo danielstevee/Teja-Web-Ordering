@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesanan Masuk — TEJA Kasir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style/admin-shared.css">
+  <style>
+    /* ── FILTER TABS ── */
+    .filter-tabs {
+      display: flex; gap: 8px;
+      overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none; margin-bottom: 16px;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-full);
+      border: 1.5px solid var(--outline);
+      background: var(--surface);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--on-variant);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .filter-tab.active {
+      background: var(--green-dark); color: #fff; border-color: var(--green-dark);
+    }
+    .filter-tab .tab-count {
+      background: rgba(255,255,255,0.2);
+      padding: 1px 7px; border-radius: var(--radius-full);
+      font-size: 11px;
+    }
+    .filter-tab:not(.active) .tab-count {
+      background: var(--green-container);
+      color: var(--green-dark);
+    }
+
+    /* ── ORDER CARD ── */
+    .order-card {
+      background: var(--surface);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--outline);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+      overflow: hidden;
+      animation: fade-up 0.3s ease forwards;
+    }
+    .order-card-header {
+      padding: 14px 16px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--outline-var);
+    }
+    .order-meta-top {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .order-customer {
+      font-size: 18px; font-weight: 800;
+      color: var(--green-dark); letter-spacing: -0.01em;
+    }
+    .order-time-badge {
+      display: flex; align-items: center; gap: 4px;
+      padding: 5px 10px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 700;
+      background: var(--surface-low); color: var(--on-variant);
+      border: 1px solid var(--outline);
+    }
+    .order-time-badge.late {
+      background: #FEE2E2; color: #991B1B; border-color: #FECACA;
+    }
+    .order-time-badge .material-symbols-outlined { font-size: 14px; }
+
+    .order-items {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--outline-var);
+    }
+    .order-item-row {
+      font-size: 14px; color: var(--on-surface);
+      line-height: 1.6; display: flex; gap: 8px;
+    }
+    .order-item-qty { font-weight: 700; color: var(--green-dark); min-width: 24px; }
+    .order-note {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: var(--surface-low);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--outline);
+      font-size: 12px; color: var(--on-variant);
+      font-style: italic;
+    }
+
+    .order-footer {
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .order-total {
+      font-size: 15px; font-weight: 800;
+      color: var(--green-dark);
+    }
+    .order-total-label {
+      font-size: 11px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .order-actions { display: flex; gap: 8px; }
+
+    .btn-action {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border-radius: var(--radius-lg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      border: none; transition: transform 0.1s, opacity 0.15s;
+    }
+    .btn-action:active { transform: scale(0.95); }
+    .btn-action .material-symbols-outlined { font-size: 16px; }
+
+    .btn-reject {
+      background: var(--outline-var); color: var(--on-variant);
+    }
+    .btn-reject:hover { background: #E5DDD3; }
+
+    .btn-confirm {
+      background: var(--green-dark); color: #fff;
+      box-shadow: 0 4px 14px rgba(27,58,45,0.30);
+    }
+    .btn-confirm:hover { background: var(--green-mid); }
+
+    .btn-send-kitchen {
+      background: linear-gradient(135deg, var(--green-darker), var(--green-dark));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(27,58,45,0.30);
+      flex: 1; justify-content: center; height: 44px;
+    }
+    .btn-send-kitchen:hover { background: var(--green-mid); }
+
+    /* Payment status row */
+    .payment-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--outline-var);
+    }
+    .payment-row .material-symbols-outlined { font-size: 18px; }
+    .payment-label { font-size: 13px; font-weight: 600; color: var(--on-variant); flex: 1; }
+    .payment-amount { font-size: 16px; font-weight: 800; color: var(--green-dark); }
+    .pay-pending { color: #92400E; }
+    .pay-done    { color: #065F46; }
+
+    /* Summary bar */
+    .summary-bar {
+      background: var(--green-dark);
+      border-radius: var(--radius-xl);
+      padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(27,58,45,0.25);
+    }
+    .summary-bar-item { text-align: center; }
+    .summary-bar-value { font-size: 22px; font-weight: 800; color: #fff; }
+    .summary-bar-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.06em; }
+    .summary-bar-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.15); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div class="admin-header-left">
+      <div class="admin-logo">
+        <div class="admin-logo-icon">
+          <span class="material-symbols-outlined">local_cafe</span>
+        </div>
+        <div>
+          <div class="admin-logo-text">TEJA</div>
+          <div class="admin-logo-sub">Kasir</div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-header-right">
+      <div class="cashier-chip">
+        <span class="material-symbols-outlined">person</span>
+        <span id="cashier-name">KSR001</span>
+      </div>
+      <button class="btn-logout" onclick="window.location.href='admin-login.html'" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="admin-container">
+    <div class="page-heading">
+      <h1>Pesanan Baru</h1>
+      <p id="order-subtitle">3 pesanan sedang menunggu</p>
+    </div>
+
+    <!-- Summary Bar -->
+    <div class="summary-bar">
+      <div class="summary-bar-item">
+        <div class="summary-bar-value" id="count-total">3</div>
+        <div class="summary-bar-label">Menunggu</div>
+      </div>
+      <div class="summary-bar-divider"></div>
+      <div class="summary-bar-item">
+        <div class="summary-bar-value" id="count-cash">1</div>
+        <div class="summary-bar-label">Tunai</div>
+      </div>
+      <div class="summary-bar-divider"></div>
+      <div class="summary-bar-item">
+        <div class="summary-bar-value" id="count-digital">2</div>
+        <div class="summary-bar-label">Digital</div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">Semua <span class="tab-count">3</span></button>
+      <button class="filter-tab" data-filter="cash">Tunai <span class="tab-count">1</span></button>
+      <button class="filter-tab" data-filter="qris">QRIS <span class="tab-count">2</span></button>
+    </div>
+
+    <!-- Orders List -->
+    <div id="orders-list"></div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="admin-nav">
+    <a href="admin-pesanan.html" class="admin-nav-item active">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="admin-nav-label">Pesanan</span>
+    </a>
+    <a href="admin-aktif.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">local_fire_department</span>
+      <span class="admin-nav-label">Aktif</span>
+    </a>
+    <a href="admin-stok.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span class="admin-nav-label">Stok</span>
+    </a>
+    <a href="admin-riwayat.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">history</span>
+      <span class="admin-nav-label">Riwayat</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    let ORDERS = [];
+
+    let currentFilter = 'all';
+
+    function formatRupiah(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
+
+    function getPaymentIcon(pay, status) {
+      if (pay === 'cash') return status === 'pending'
+        ? { icon: 'payments', label: 'Menunggu Konfirmasi Tunai', cls: 'pay-pending' }
+        : { icon: 'check_circle', label: 'Lunas Tunai', cls: 'pay-done' };
+      if (pay === 'qris') return status === 'pending'
+        ? { icon: 'hourglass_top', label: 'Menunggu Bayar (QR)', cls: 'pay-pending' }
+        : { icon: 'check_circle', label: 'Lunas Digital', cls: 'pay-done' };
+      return { icon: 'payments', label: 'Pembayaran', cls: '' };
+    }
+
+    function getActionButtons(order) {
+      const pay = order.payStatus;
+      const method = order.payment;
+      if (method === 'cash' && pay === 'pending') {
+        return `
+          <button class="btn-action btn-reject" onclick="rejectOrder('${order.id}')">
+            <span class="material-symbols-outlined">close</span> Tolak
+          </button>
+          <button class="btn-action btn-confirm" onclick="confirmPayment('${order.id}')">
+            <span class="material-symbols-outlined">check_circle</span> Konfirmasi Bayar
+          </button>`;
+      }
+      if (pay === 'paid') {
+        return `<button class="btn-action btn-send-kitchen" onclick="sendToKitchen('${order.id}')">
+          <span class="material-symbols-outlined">send</span> Kirim ke Dapur
+        </button>`;
+      }
+      return `<button class="btn-action btn-reject" style="opacity:0.5;pointer-events:none">
+        <span class="material-symbols-outlined">block</span> Belum Lunas
+      </button>`;
+    }
+
+    function renderOrders() {
+      const list = document.getElementById('orders-list');
+      const waitingOrders = ORDERS.filter(o => o.orderStatus === 'baru');
+      const filtered = currentFilter === 'all'
+        ? waitingOrders
+        : waitingOrders.filter(o => o.payment === currentFilter);
+
+      if (!filtered.length) {
+        list.innerHTML = `<div style="text-align:center;padding:48px 20px;color:var(--muted);">
+          <span class="material-symbols-outlined" style="font-size:48px;color:var(--outline);display:block;margin-bottom:10px;">inbox</span>
+          Tidak ada pesanan masuk
+        </div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(order => {
+        const payInfo = getPaymentIcon(order.payment, order.payStatus);
+        return `
+          <div class="order-card" id="card-${order.id}">
+            <div class="order-card-header">
+              <div>
+                <div class="order-meta-top">Meja ${String(order.meja).padStart(2,'0')} • #${order.id}</div>
+                <div class="order-customer">${order.customer}</div>
+              </div>
+              <div class="order-time-badge">
+                <span class="material-symbols-outlined">schedule</span>
+                ${TejaSupabase.formatTime(order.createdAt)}
+              </div>
+            </div>
+            <div class="order-items">
+              ${order.items.map(i => `<div class="order-item-row"><span class="order-item-qty">${i.qty}×</span><span>${i.name}</span></div>`).join('')}
+              ${order.note ? `<div class="order-note">"${order.note}"</div>` : ''}
+            </div>
+            <div class="payment-row">
+              <span class="material-symbols-outlined ${payInfo.cls}">${payInfo.icon}</span>
+              <span class="payment-label ${payInfo.cls}">${payInfo.label}</span>
+              <span class="payment-amount">${formatRupiah(order.total)}</span>
+            </div>
+            <div class="order-footer">
+              <div class="order-actions" style="flex:1;">${getActionButtons(order)}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function confirmPayment(id) {
+      await TejaSupabase.updateOrder(id, { payStatus: 'paid' });
+      await refreshOrders();
+    }
+
+    async function rejectOrder(id) {
+      await TejaSupabase.updateOrder(id, { orderStatus: 'ditolak' });
+      await refreshOrders();
+    }
+
+    function sendToKitchen(id) {
+      const card = document.getElementById('card-' + id);
+      if (card) {
+        card.style.opacity = '0.5';
+        card.style.transform = 'scale(0.97)';
+        card.style.transition = 'all 0.3s';
+        setTimeout(async () => {
+          await TejaSupabase.updateOrder(id, { orderStatus: 'diproses' });
+          await refreshOrders();
+        }, 400);
+      }
+    }
+
+    function updateCounts() {
+      const waitingOrders = ORDERS.filter(o => o.orderStatus === 'baru');
+      const cashCount = waitingOrders.filter(o => o.payment === 'cash').length;
+      const qrisCount = waitingOrders.filter(o => o.payment === 'qris').length;
+      document.getElementById('count-total').textContent = waitingOrders.length;
+      document.getElementById('count-cash').textContent  = cashCount;
+      document.getElementById('count-digital').textContent = qrisCount;
+      document.getElementById('order-subtitle').textContent = `${waitingOrders.length} pesanan sedang menunggu`;
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        const f = tab.dataset.filter;
+        const count = f === 'all' ? waitingOrders.length : waitingOrders.filter(o => o.payment === f).length;
+        tab.querySelector('.tab-count').textContent = count;
+      });
+    }
+
+    async function refreshOrders() {
+      ORDERS = await TejaSupabase.listOrders();
+      updateCounts();
+      renderOrders();
+    }
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.dataset.filter;
+        renderOrders();
+      });
+    });
+
+    // Init
+    const cashierName = sessionStorage.getItem('teja_cashier') || 'KSR001';
+    document.getElementById('cashier-name').textContent = cashierName;
+    refreshOrders();
+    TejaSupabase.subscribe((orders) => {
+      ORDERS = orders;
+      updateCounts();
+      renderOrders();
+    });
+  </script>
+</body>
+</html>

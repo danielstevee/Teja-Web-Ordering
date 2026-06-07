@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Stok Menu — TEJA Kasir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style/admin-shared.css">
+  <style>
+    /* Search bar */
+    .search-wrap {
+      position: relative; margin-bottom: 20px;
+    }
+    .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted);
+    }
+    .search-icon .material-symbols-outlined { font-size: 20px; }
+    .search-input {
+      width: 100%; height: 48px;
+      padding: 0 14px 0 44px;
+      border: 1.5px solid var(--outline);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      color: var(--on-surface); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: var(--muted); font-weight: 400; }
+    .search-input:focus {
+      border-color: var(--green-dark);
+      box-shadow: 0 0 0 3px rgba(27,58,45,0.10);
+    }
+
+    /* Category section */
+    .category-section { margin-bottom: 24px; }
+    .category-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .category-icon {
+      width: 28px; height: 28px;
+      background: var(--green-container);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .category-icon .material-symbols-outlined { font-size: 16px; color: var(--green-dark); }
+    .category-title {
+      font-size: 17px; font-weight: 800;
+      color: var(--green-dark); letter-spacing: -0.01em;
+    }
+
+    /* Menu item card */
+    .menu-item-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--outline);
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: opacity 0.2s;
+    }
+    .menu-item-card.unavailable { opacity: 0.65; }
+
+    .menu-thumb {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-md);
+      object-fit: cover; flex-shrink: 0;
+      background: var(--green-container);
+    }
+    .menu-thumb-placeholder {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--green-container);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .menu-thumb-placeholder .material-symbols-outlined {
+      font-size: 24px; color: var(--green-dark); opacity: 0.5;
+    }
+
+    .menu-info { flex: 1; min-width: 0; }
+    .menu-name {
+      font-size: 14px; font-weight: 700;
+      color: var(--on-surface);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .menu-name.unavailable-text { color: var(--muted); }
+    .menu-price {
+      font-size: 13px; font-weight: 600;
+      color: var(--green-light); margin-top: 2px;
+    }
+
+    .avail-badge {
+      display: inline-block;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      margin-top: 5px;
+    }
+    .avail-badge.on  { background: #DCFCE7; color: #065F46; }
+    .avail-badge.off { background: var(--outline-var); color: var(--muted); }
+
+    /* Toggle switch */
+    .toggle-switch {
+      position: relative; width: 48px; height: 28px; flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer;
+      inset: 0; border-radius: 28px;
+      background: var(--outline); transition: background 0.25s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      height: 20px; width: 20px;
+      left: 4px; bottom: 4px;
+      border-radius: 50%; background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.20);
+      transition: transform 0.25s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--green-dark); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* Toast notification */
+    .toast {
+      position: fixed; bottom: 96px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green-dark); color: #fff;
+      padding: 10px 20px; border-radius: var(--radius-full);
+      font-size: 13px; font-weight: 700;
+      box-shadow: 0 8px 24px rgba(27,58,45,0.35);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 100; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="admin-header-left">
+      <div class="admin-logo">
+        <div class="admin-logo-icon">
+          <span class="material-symbols-outlined">local_cafe</span>
+        </div>
+        <div>
+          <div class="admin-logo-text">TEJA</div>
+          <div class="admin-logo-sub">Kasir</div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-header-right">
+      <div class="cashier-chip">
+        <span class="material-symbols-outlined">person</span>
+        <span id="cashier-name">KSR001</span>
+      </div>
+      <button class="btn-logout" onclick="window.location.href='admin-login.html'" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <div class="page-heading">
+      <h1>Kelola Stok Menu</h1>
+      <p>Perbarui ketersediaan item untuk menu hari ini.</p>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-icon"><span class="material-symbols-outlined">search</span></div>
+      <input class="search-input" type="text" id="search-input" placeholder="Cari nama menu...">
+    </div>
+
+    <div id="menu-list"></div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <nav class="admin-nav">
+    <a href="admin-pesanan.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="admin-nav-label">Pesanan</span>
+    </a>
+    <a href="admin-aktif.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">local_fire_department</span>
+      <span class="admin-nav-label">Aktif</span>
+    </a>
+    <a href="admin-stok.html" class="admin-nav-item active">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span class="admin-nav-label">Stok</span>
+    </a>
+    <a href="admin-riwayat.html" class="admin-nav-item">
+      <span class="material-symbols-outlined">history</span>
+      <span class="admin-nav-label">Riwayat</span>
+    </a>
+  </nav>
+
+  <script>
+    const MENU_DATA = [
+      {
+        category: 'Minuman Espresso & Spesialti',
+        icon: 'local_cafe',
+        items: [
+          { id: 1, name: 'Signature Latte',     price: 38000, available: true },
+          { id: 2, name: 'Twilight Cold Brew',   price: 42000, available: true },
+          { id: 3, name: 'Ceremonial Matcha',    price: 45000, available: false },
+          { id: 4, name: 'Espresso Romano',      price: 32000, available: true },
+          { id: 5, name: 'Iced V60 Ethiopia',    price: 52000, available: true },
+          { id: 6, name: 'Cappuccino XL',        price: 45000, available: true },
+        ]
+      },
+      {
+        category: 'Makanan & Pastry',
+        icon: 'restaurant',
+        items: [
+          { id: 7,  name: 'Butter Croissant',    price: 28000, available: true },
+          { id: 8,  name: 'Avocado Smash',       price: 65000, available: true },
+          { id: 9,  name: 'Truffle Alfredo',     price: 85000, available: true },
+          { id: 10, name: 'Almond Croissant',    price: 32000, available: true },
+          { id: 11, name: 'Wagyu Beef Sliders',  price: 95000, available: false },
+          { id: 12, name: 'Truffle Fries',       price: 48000, available: true },
+        ]
+      }
+    ];
+
+    function formatRupiah(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    function toggle(id) {
+      for (const cat of MENU_DATA) {
+        const item = cat.items.find(i => i.id === id);
+        if (item) {
+          item.available = !item.available;
+          showToast(item.available ? `✓ ${item.name} — Tersedia` : `✗ ${item.name} — Habis`);
+          renderMenu(document.getElementById('search-input').value);
+          break;
+        }
+      }
+    }
+
+    function renderMenu(query = '') {
+      const q = query.toLowerCase().trim();
+      const container = document.getElementById('menu-list');
+      let html = '';
+
+      MENU_DATA.forEach(cat => {
+        const items = cat.items.filter(i => !q || i.name.toLowerCase().includes(q));
+        if (!items.length) return;
+
+        html += `<div class="category-section">
+          <div class="category-header">
+            <div class="category-icon"><span class="material-symbols-outlined">${cat.icon}</span></div>
+            <span class="category-title">${cat.category}</span>
+          </div>
+          ${items.map(item => `
+            <div class="menu-item-card ${item.available ? '' : 'unavailable'}">
+              <div class="menu-thumb-placeholder">
+                <span class="material-symbols-outlined">fastfood</span>
+              </div>
+              <div class="menu-info">
+                <div class="menu-name ${item.available ? '' : 'unavailable-text'}">${item.name}</div>
+                <div class="menu-price">${formatRupiah(item.price)}</div>
+                <div class="avail-badge ${item.available ? 'on' : 'off'}">${item.available ? 'Tersedia' : 'Habis'}</div>
+              </div>
+              <label class="toggle-switch" aria-label="Toggle ketersediaan ${item.name}">
+                <input type="checkbox" ${item.available ? 'checked' : ''} onchange="toggle(${item.id})">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>`).join('')}
+        </div>`;
+      });
+
+      if (!html) {
+        html = `<div style="text-align:center;padding:48px 20px;color:var(--muted);">
+          <span class="material-symbols-outlined" style="font-size:48px;color:var(--outline);display:block;margin-bottom:10px;">search_off</span>
+          Menu tidak ditemukan
+        </div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    document.getElementById('search-input').addEventListener('input', function () {
+      renderMenu(this.value);
+    });
+
+    const cashierName = sessionStorage.getItem('teja_cashier') || 'KSR001';
+    document.getElementById('cashier-name').textContent = cashierName;
+    renderMenu();
+  </script>
+</body>
+</html>

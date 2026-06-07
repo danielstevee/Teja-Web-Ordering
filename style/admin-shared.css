@@ -1,0 +1,205 @@
+/* ============================================================
+   TEJA ADMIN — admin-shared.css
+   Shared styles for all cashier/admin pages
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark:   #1B3A2D;
+  --green-darker: #0D2B1E;
+  --green-mid:    #234D38;
+  --green-light:  #2E6045;
+  --green-container: #E8F2EC;
+  --cream:        #F5F0E8;
+  --surface:      #FFFFFF;
+  --surface-low:  #F7F4EE;
+  --outline:      #DDD8D0;
+  --outline-var:  #EDE8E0;
+  --muted:        #9A948E;
+  --on-surface:   #1A1A1A;
+  --on-variant:   #6B6660;
+  --error:        #C0392B;
+  --error-bg:     #FDECEA;
+  --accent:       #D4A96A;
+  --status-new:       #1B3A2D;
+  --status-cooking:   #B45309;
+  --status-ready:     #065F46;
+  --status-done:      #6B6660;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-2xl: 24px;
+  --radius-full:9999px;
+  --shadow-sm: 0 2px 8px rgba(27,58,45,0.10);
+  --shadow-md: 0 4px 16px rgba(27,58,45,0.14);
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--cream);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 90px;
+}
+
+/* ── TOP HEADER ── */
+.admin-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(27,58,45,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 16px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.admin-header-left {
+  display: flex; align-items: center; gap: 10px;
+}
+
+.admin-logo {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.admin-logo-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.admin-logo-icon .material-symbols-outlined { font-size: 18px; color: #fff; }
+
+.admin-logo-text {
+  font-size: 16px; font-weight: 800;
+  color: #fff; letter-spacing: -0.01em;
+}
+
+.admin-logo-sub {
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,0.50);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+.admin-header-right {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.cashier-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-full);
+  padding: 5px 12px 5px 8px;
+  color: rgba(255,255,255,0.90);
+  font-size: 12px; font-weight: 700;
+}
+
+.cashier-chip .material-symbols-outlined { font-size: 16px; }
+
+.btn-logout {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-full);
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.70);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-logout:hover { background: rgba(255,255,255,0.16); color: #fff; }
+.btn-logout .material-symbols-outlined { font-size: 18px; }
+
+/* ── BOTTOM NAV ── */
+.admin-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(245,240,232,0.97);
+  border-top: 1px solid var(--outline);
+  backdrop-filter: blur(20px);
+  height: 80px;
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 0 8px;
+  box-shadow: 0 -4px 20px rgba(27,58,45,0.08);
+}
+
+.admin-nav-item {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px; padding: 6px 20px;
+  border-radius: var(--radius-lg);
+  cursor: pointer; border: none; background: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+  position: relative; min-width: 64px;
+}
+
+.admin-nav-item:active { transform: scale(0.90); }
+
+.admin-nav-item .material-symbols-outlined { font-size: 22px; color: var(--muted); }
+.admin-nav-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.02em; }
+
+.admin-nav-item.active .material-symbols-outlined {
+  color: var(--green-dark);
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+.admin-nav-item.active .admin-nav-label { color: var(--green-dark); }
+.admin-nav-item.active::after {
+  content: ''; position: absolute; bottom: 8px;
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--green-dark);
+}
+
+/* ── PAGE CONTAINER ── */
+.admin-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 76px 16px 24px;
+}
+
+/* ── PAGE TITLE ── */
+.page-heading { margin-bottom: 20px; }
+.page-heading h1 {
+  font-size: 26px; font-weight: 800;
+  color: var(--green-dark); letter-spacing: -0.02em;
+}
+.page-heading p {
+  font-size: 13px; color: var(--muted); margin-top: 3px;
+}
+
+/* ── CARD ── */
+.admin-card {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--outline);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+/* ── STATUS BADGES ── */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--radius-full);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.status-badge .material-symbols-outlined { font-size: 13px; }
+
+.badge-new      { background: #DCFCE7; color: #065F46; }
+.badge-cooking  { background: #FEF3C7; color: #92400E; }
+.badge-ready    { background: #E8F2EC; color: var(--green-dark); }
+.badge-done     { background: #F3F4F6; color: #6B7280; }
+.badge-late     { background: #FEE2E2; color: #991B1B; }
+
+/* ── ANIMATIONS ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.7s linear infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.3s ease forwards; }
