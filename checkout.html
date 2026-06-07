@@ -653,6 +653,34 @@
 
       setTimeout(() => {
         btnBayar.classList.remove('loading');
+
+        // Hitung total untuk disimpan ke snapshot
+        const subtotal   = Object.values(cart).reduce((s, i) => s + i.harga * i.qty, 0);
+        const tax        = Math.round(subtotal * TAX_RATE);
+        const grandTotal = subtotal + tax + SERVICE_FEE;
+
+        // Ambil metode pembayaran yang dipilih
+        const selectedPayment = document.querySelector('input[name="payment"]:checked')
+          ?.closest('.payment-option')
+          ?.querySelector('.payment-option__name')
+          ?.textContent?.trim() || '—';
+
+        // Generate Order ID baru
+        const year    = new Date().getFullYear();
+        const rand    = Math.floor(1000 + Math.random() * 9000);
+        const orderId = `UD-${year}-${rand}`;
+
+        // Sinkronkan nomor meja dari sessionStorage → localStorage
+        const meja = sessionStorage.getItem('urbandine_meja') || localStorage.getItem('urbandine_table') || '';
+        if (meja) localStorage.setItem('urbandine_table', meja);
+
+        // Simpan semua data pesanan ke localStorage
+        localStorage.setItem('urbandine_order_id',       orderId);
+        localStorage.setItem('urbandine_order_snapshot', JSON.stringify(cart));
+        localStorage.setItem('urbandine_order_total',    String(grandTotal));
+        localStorage.setItem('urbandine_order_payment',  selectedPayment);
+        localStorage.setItem('urbandine_order_time',     new Date().toISOString());
+
         modal.classList.add('visible');
       }, 1500);
     });
@@ -660,8 +688,9 @@
     // ── Tombol Selesai ──────────────────────────────────────────
     document.getElementById('btn-selesai').addEventListener('click', () => {
       modal.classList.remove('visible');
+      // Kosongkan cart aktif, snapshot tetap ada untuk ditampilkan di status pesanan
       localStorage.removeItem('urbandine_cart');
-      window.location.href = 'welcome.html';
+      window.location.href = 'statuspesanan.html';
     });
   </script>
 

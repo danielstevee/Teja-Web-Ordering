@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Status Pesanan — UrbanDine</title>
+ 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+ 
+  <!-- Gunakan styling.css yang sama dengan index.html -->
+  <link rel="stylesheet" href="style/styling.css">
+ 
+  <style>
+    /* ============================================================
+       ORDER PAGE — Tambahan CSS di atas styling.css
+       ============================================================ */
+ 
+    /* ── FAB hidden state (dari cart.js) ── */
+    .fab--hidden { display: none !important; }
+ 
+    @keyframes fab-bump {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+    .fab--bump { animation: fab-bump 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+ 
+    @keyframes badge-pop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+    .badge--pop { animation: badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+ 
+    /* ── TABLE NUMBER SCREEN ── */
+    #screen-table {
+      position: fixed;
+      inset: 0;
+      background: var(--color-background);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px var(--spacing-margin-mobile);
+      text-align: center;
+    }
+ 
+    #screen-table .table-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+ 
+    #screen-table .table-icon .material-symbols-outlined {
+      font-size: 34px;
+      color: var(--color-primary);
+    }
+ 
+    #screen-table h2 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+ 
+    #screen-table p {
+      font-size: 14px;
+      color: var(--color-on-surface-variant);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+ 
+    .table-input-wrap {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 16px;
+    }
+ 
+    .table-input-wrap label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-on-surface-variant);
+      margin-bottom: 8px;
+      text-align: left;
+    }
+ 
+    .table-input-wrap input {
+      width: 100%;
+      height: 52px;
+      border: 1.5px solid var(--color-outline-variant);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      font-family: var(--font-base);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-align: center;
+      letter-spacing: 0.05em;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+ 
+    .table-input-wrap input::placeholder {
+      color: var(--color-on-surface-muted);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+ 
+    .table-input-wrap input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(27,58,45,0.10);
+    }
+ 
+    .table-error {
+      font-size: 12px;
+      color: var(--color-error);
+      margin-top: 6px;
+      min-height: 16px;
+      text-align: left;
+    }
+ 
+    .btn-confirm-table {
+      width: 100%;
+      max-width: 320px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+      color: var(--color-on-primary);
+      font-family: var(--font-base);
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: var(--radius-xl);
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: transform 0.1s, box-shadow 0.15s;
+      box-shadow: var(--shadow-md);
+    }
+ 
+    .btn-confirm-table:hover  { box-shadow: var(--shadow-lg); }
+    .btn-confirm-table:active { transform: scale(0.97); }
+ 
+    /* ── ORDER PAGE (main content) ── */
+    #page-order { display: none; }
+    #page-order.is-visible { display: block; }
+ 
+    /* ── ORDER SUMMARY CARD ── */
+    .order-summary-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-2xl);
+      padding: 18px;
+      border: 1px solid var(--color-outline-variant);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-gutter-sm);
+    }
+ 
+    .order-summary-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+ 
+    .order-id-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-on-surface-muted);
+      margin-bottom: 4px;
+    }
+ 
+    .order-id-value {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+ 
+    /* Live badge */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--color-primary-container);
+      border: 1.5px solid var(--color-primary);
+      color: var(--color-primary);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+    }
+ 
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-light);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+ 
+    @keyframes blink {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.75); }
+    }
+ 
+    /* ETA box */
+    .eta-box {
+      background: var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+ 
+    .eta-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+ 
+    .eta-icon .material-symbols-outlined {
+      color: #fff;
+      font-size: 20px;
+    }
+ 
+    .eta-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 3px;
+    }
+ 
+    .eta-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+ 
+    /* ── PROGRESS TRACKER CARD ── */
+    .progress-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-2xl);
+      padding: 20px 18px;
+      border: 1px solid var(--color-outline-variant);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-gutter-sm);
+    }
+ 
+    .step-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+ 
+    .step-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+ 
+    .step-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid var(--color-outline-variant);
+      background: var(--color-surface);
+    }
+ 
+    .step-icon-wrap.is-done {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+ 
+    .step-icon-wrap.is-done .material-symbols-outlined {
+      color: #fff;
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+ 
+    .step-icon-wrap.is-active {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+      animation: step-pulse 2s ease-in-out infinite;
+    }
+ 
+    .step-icon-wrap.is-active .material-symbols-outlined {
+      color: var(--color-primary);
+    }
+ 
+    .step-icon-wrap.is-pending .material-symbols-outlined {
+      color: var(--color-outline);
+    }
+ 
+    @keyframes step-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(27,58,45,0.25); }
+      50%      { box-shadow: 0 0 0 6px rgba(27,58,45,0); }
+    }
+ 
+    .step-icon-wrap .material-symbols-outlined { font-size: 17px; }
+ 
+    .step-connector {
+      width: 2px;
+      flex: 1;
+      min-height: 22px;
+      margin: 3px 0;
+      border-radius: 1px;
+    }
+ 
+    .step-connector.is-done    { background: var(--color-primary); }
+    .step-connector.is-pending { background: var(--color-outline-variant); }
+ 
+    .step-body { flex: 1; padding-bottom: 20px; }
+    .step-body.is-last { padding-bottom: 0; }
+ 
+    .step-time {
+      font-size: 11px;
+      color: var(--color-on-surface-muted);
+      margin-bottom: 2px;
+    }
+ 
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      margin-bottom: 3px;
+    }
+ 
+    .step-title.is-pending { color: var(--color-on-surface-muted); }
+ 
+    .step-desc {
+      font-size: 12px;
+      color: var(--color-on-surface-variant);
+      line-height: 1.55;
+    }
+ 
+    .step-desc.is-pending { color: var(--color-outline); }
+ 
+    /* ── CALL WAITER CARD ── */
+    .waiter-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-2xl);
+      padding: 16px 18px;
+      border: 1px solid var(--color-outline-variant);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: var(--spacing-gutter-sm);
+    }
+ 
+    .waiter-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-primary);
+    }
+ 
+    .waiter-icon-wrap .material-symbols-outlined { font-size: 22px; }
+ 
+    .waiter-info { flex: 1; }
+ 
+    .waiter-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+    }
+ 
+    .waiter-sub {
+      font-size: 12px;
+      color: var(--color-on-surface-muted);
+    }
+ 
+    .btn-call-waiter {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      font-family: var(--font-base);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      text-align: center;
+      line-height: 1.4;
+      transition: background 0.15s, transform 0.1s;
+    }
+ 
+    .btn-call-waiter:hover  { background: var(--color-primary-light); }
+    .btn-call-waiter:active { transform: scale(0.95); }
+ 
+    /* ── MENU DETAIL CARD ── */
+    .menu-detail-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--color-outline-variant);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+ 
+    .menu-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+    }
+ 
+    .menu-row + .menu-row {
+      border-top: 1px solid var(--color-surface-container);
+    }
+ 
+    .menu-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--color-primary-container);
+    }
+ 
+    .menu-thumb-placeholder {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+ 
+    .menu-thumb-placeholder .material-symbols-outlined {
+      font-size: 26px;
+      color: var(--color-primary);
+    }
+ 
+    .menu-info { flex: 1; min-width: 0; }
+ 
+    .menu-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+ 
+    .menu-meta {
+      font-size: 11px;
+      color: var(--color-on-surface-muted);
+    }
+ 
+    .menu-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      white-space: nowrap;
+    }
+ 
+    /* Summary baris */
+    .summary-divider {
+      height: 1px;
+      background: var(--color-surface-container);
+      margin: 0 16px;
+    }
+ 
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--color-on-surface-variant);
+    }
+ 
+    .summary-row.total {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--color-primary);
+      border-top: 1.5px solid var(--color-surface-dim);
+      padding-top: 14px;
+      padding-bottom: 16px;
+      margin-top: 4px;
+    }
+ 
+    /* Empty cart state */
+    .empty-cart {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-on-surface-muted);
+    }
+ 
+    .empty-cart .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--color-outline);
+      margin-bottom: 10px;
+    }
+ 
+    .empty-cart p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+ 
+<body>
+ 
+  <!-- ============================================================
+       SCREEN 1 — INPUT NOMOR MEJA
+       ============================================================ -->
+  <div id="screen-table">
+    <div class="table-icon">
+      <span class="material-symbols-outlined">table_restaurant</span>
+    </div>
+ 
+    <h2>Nomor Meja</h2>
+    <p>Masukkan nomor meja Anda untuk<br>melihat status pesanan.</p>
+ 
+    <div class="table-input-wrap">
+      <label for="input-table">Nomor Meja</label>
+      <input
+        type="number"
+        id="input-table"
+        placeholder="Contoh: 7"
+        min="1"
+        max="99"
+        inputmode="numeric"
+        autocomplete="off"
+        aria-label="Nomor meja"
+      >
+      <div class="table-error" id="table-error" aria-live="polite"></div>
+    </div>
+ 
+    <button class="btn-confirm-table" id="btn-confirm-table">
+      Konfirmasi Meja
+    </button>
+  </div>
+ 
+ 
+  <!-- ============================================================
+       SCREEN 2 — HALAMAN STATUS PESANAN
+       ============================================================ -->
+  <div id="page-order">
+ 
+    <!-- HEADER (sama struktur dengan index.html) -->
+    <header id="site-header">
+      <div class="header-inner">
+        <div class="logo">
+          <img src="assets/lofo-teja-v2.svg" alt="UrbanDine Logo">
+          <span class="logo-text"></span>
+        </div>
+        <button
+          id="btn-change-table"
+          style="
+            display:flex; align-items:center; gap:6px;
+            background:var(--color-primary-container);
+            color:var(--color-primary);
+            font-family:var(--font-base);
+            font-size:12px; font-weight:700;
+            border:none; border-radius:var(--radius-full);
+            padding:8px 14px; cursor:pointer;
+            transition:background 0.15s;
+          "
+          aria-label="Ganti nomor meja"
+        >
+          <span class="material-symbols-outlined" style="font-size:16px">table_restaurant</span>
+          <span id="header-table-label">Meja —</span>
+        </button>
+      </div>
+    </header>
+ 
+    <!-- MAIN CONTENT -->
+    <main class="page-container">
+ 
+      <!-- ORDER SUMMARY -->
+      <section class="section">
+        <div class="order-summary-card">
+          <div class="order-summary-top">
+            <div>
+              <div class="order-id-label">Order ID</div>
+              <div class="order-id-value" id="display-order-id">#UD–0000</div>
+            </div>
+            <div class="live-badge">
+              <div class="live-dot"></div>
+              Live Status
+            </div>
+          </div>
+          <div class="eta-box">
+            <div class="eta-icon">
+              <span class="material-symbols-outlined">schedule</span>
+            </div>
+            <div>
+              <div class="eta-label">Estimasi Penyajian</div>
+              <div class="eta-value">12 – 15 Menit</div>
+            </div>
+          </div>
+        </div>
+      </section>
+ 
+      <!-- PROGRESS TRACKER -->
+      <section class="section">
+        <div class="progress-card">
+ 
+          <!-- Step 1: Pesanan Diterima (done) -->
+          <div class="step-row">
+            <div class="step-col">
+              <div class="step-icon-wrap is-done">
+                <span class="material-symbols-outlined">check</span>
+              </div>
+              <div class="step-connector is-done"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-time" id="step1-time"></div>
+              <div class="step-title">Pesanan Diterima</div>
+              <div class="step-desc">Pesanan Anda telah dikonfirmasi oleh sistem.</div>
+            </div>
+          </div>
+ 
+          <!-- Step 2: Sedang Dimasak (active) -->
+          <div class="step-row">
+            <div class="step-col">
+              <div class="step-icon-wrap is-active">
+                <span class="material-symbols-outlined">local_fire_department</span>
+              </div>
+              <div class="step-connector is-pending"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Sedang Dimasak</div>
+              <div class="step-desc">Chef kami sedang menyiapkan hidangan spesial untuk Anda.</div>
+            </div>
+          </div>
+ 
+          <!-- Step 3: Siap Disajikan (pending) -->
+          <div class="step-row">
+            <div class="step-col">
+              <div class="step-icon-wrap is-pending">
+                <span class="material-symbols-outlined">restaurant</span>
+              </div>
+              <div class="step-connector is-pending"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title is-pending">Siap Disajikan</div>
+              <div class="step-desc is-pending">Hidangan akan segera diantar ke meja Anda.</div>
+            </div>
+          </div>
+ 
+          <!-- Step 4: Selesai (pending) -->
+          <div class="step-row">
+            <div class="step-col">
+              <div class="step-icon-wrap is-pending">
+                <span class="material-symbols-outlined">sentiment_satisfied</span>
+              </div>
+            </div>
+            <div class="step-body is-last">
+              <div class="step-title is-pending">Selesai</div>
+              <div class="step-desc is-pending">Nikmati waktu bersantap Anda di UrbanDine.</div>
+            </div>
+          </div>
+ 
+        </div>
+      </section>
+ 
+      <!-- CALL WAITER -->
+      <section class="section">
+        <div class="waiter-card">
+          <div class="waiter-icon-wrap">
+            <span class="material-symbols-outlined">notifications_active</span>
+          </div>
+          <div class="waiter-info">
+            <div class="waiter-title">Butuh Sesuatu?</div>
+            <div class="waiter-sub">Pelayan kami siap membantu.</div>
+          </div>
+          <button class="btn-call-waiter" id="btn-call-waiter">
+            Panggil<br>Pelayan
+          </button>
+        </div>
+      </section>
+ 
+      <!-- RINCIAN MENU (dari Cart) -->
+      <section class="section">
+        <div class="section-header">
+          <h2 class="text-headline-md text-primary">Rincian Menu</h2>
+        </div>
+        <div class="menu-detail-card" id="menu-detail-list">
+          <!-- diisi oleh JS dari Cart -->
+        </div>
+      </section>
+ 
+    </main>
+ 
+    <!-- FAB KERANJANG (sama dengan index.html) -->
+    <div id="fab-cart" class="fab--hidden">
+      <button class="fab-btn" aria-label="Lihat keranjang" onclick="window.location.href='cart.html'">
+        <div class="fab-left">
+          <div class="fab-icon-wrap">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <span class="fab-badge" id="fab-badge" aria-label="0 item">0</span>
+          </div>
+          <span class="fab-label">Lihat Keranjang</span>
+        </div>
+        <span class="fab-total" id="fab-total">Rp 0</span>
+      </button>
+    </div>
+ 
+    <!-- BOTTOM NAV (sama dengan index.html) -->
+    <nav id="bottom-nav" aria-label="Navigasi utama">
+      <button class="nav-item nav-item--inactive" onclick="window.location.href='index.html'">
+        <span class="material-symbols-outlined">restaurant_menu</span>
+        <span class="nav-label">Menu</span>
+      </button>
+      <button class="nav-item nav-item--active" aria-current="page">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span class="nav-label">Orders</span>
+      </button>
+      <button class="nav-item nav-item--inactive" onclick="window.location.href='cart.html'">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="nav-label">Cart</span>
+      </button>
+    </nav>
+ 
+  </div><!-- /page-order -->
+ 
+ 
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="cart.js"></script>
+ 
+  <script>
+    /* ----------------------------------------------------------
+       KONSTANTA & HELPER
+       ---------------------------------------------------------- */
+    const TABLE_KEY   = 'urbandine_table';
+    const ORDER_KEY   = 'urbandine_order_id';
+ 
+    function getTableNumber()  { return localStorage.getItem(TABLE_KEY) || ''; }
+    function setTableNumber(n) { localStorage.setItem(TABLE_KEY, n); }
+ 
+    function getOrderId() {
+      let id = localStorage.getItem(ORDER_KEY);
+      if (!id) {
+        /* Generate sederhana: UD-[tahun][random 4 digit] */
+        const year   = new Date().getFullYear();
+        const rand   = Math.floor(1000 + Math.random() * 9000);
+        id = `UD-${year}-${rand}`;
+        localStorage.setItem(ORDER_KEY, id);
+      }
+      return id;
+    }
+ 
+    /* ----------------------------------------------------------
+       RENDER ORDER PAGE
+       ---------------------------------------------------------- */
+    function renderOrderPage(tableNo) {
+      /* Sembunyikan screen meja, tampilkan page order */
+      document.getElementById('screen-table').style.display = 'none';
+      const page = document.getElementById('page-order');
+      page.classList.add('is-visible');
+ 
+      /* Update header label */
+      document.getElementById('header-table-label').textContent = `Meja ${tableNo}`;
+ 
+      /* Update Order ID */
+      const orderId = getOrderId();
+      document.getElementById('display-order-id').textContent = `#${orderId}`;
+ 
+      /* Timestamp step 1 */
+      const now = new Date();
+      const hh  = String(now.getHours()).padStart(2, '0');
+      const mm  = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('step1-time').textContent = `${hh}:${mm}`;
+ 
+      /* Render menu dari Cart */
+      renderMenuList();
+ 
+      /* Init FAB dari cart.js */
+      Cart.init();
+    }
+ 
+    /* ----------------------------------------------------------
+       RENDER DAFTAR MENU — baca dari snapshot checkout
+       (cart sudah dikosongkan setelah bayar, jadi pakai snapshot)
+       ---------------------------------------------------------- */
+    function renderMenuList() {
+      const container = document.getElementById('menu-detail-list');
+
+      // Prioritas: snapshot dari checkout → cart aktif (jika datang dari luar checkout)
+      let items = {};
+      const snapshotRaw = localStorage.getItem('urbandine_order_snapshot');
+      if (snapshotRaw) {
+        try { items = JSON.parse(snapshotRaw); } catch {}
+      }
+      if (!Object.keys(items).length) {
+        items = Cart.getAll();
+      }
+
+      const keys = Object.keys(items);
+
+      if (keys.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <span class="material-symbols-outlined">shopping_cart_off</span>
+            <p>Belum ada pesanan.<br>Tambahkan menu dari halaman Menu.</p>
+          </div>`;
+        return;
+      }
+
+      let html  = '';
+      let total = 0;
+
+      keys.forEach(nama => {
+        const item     = items[nama];
+        const subtotal = item.harga * item.qty;
+        total += subtotal;
+
+        const imgHtml = item.img
+          ? `<img class="menu-thumb" src="${item.img}" alt="${nama}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          : '';
+
+        html += `
+          <div class="menu-row">
+            ${imgHtml}
+            <div class="menu-thumb-placeholder" style="${item.img ? 'display:none' : ''}">
+              <span class="material-symbols-outlined">restaurant</span>
+            </div>
+            <div class="menu-info">
+              <div class="menu-name">${nama}</div>
+              <div class="menu-meta">Qty: ${item.qty}</div>
+            </div>
+            <div class="menu-price">${Cart.formatRupiah(subtotal)}</div>
+          </div>`;
+      });
+
+      // Gunakan total grand dari snapshot jika tersedia, agar konsisten dengan checkout
+      const savedTotal = parseInt(localStorage.getItem('urbandine_order_total')) || 0;
+      const layanan    = Math.round(total * 0.05);
+      const grandTotal = savedTotal || (total + layanan);
+
+      html += `
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span>Subtotal</span><span>${Cart.formatRupiah(total)}</span></div>
+        <div class="summary-row"><span>Biaya layanan (5%)</span><span>${Cart.formatRupiah(layanan)}</span></div>
+        <div class="summary-row total"><span>Total</span><span>${Cart.formatRupiah(grandTotal)}</span></div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    /* ----------------------------------------------------------
+       INISIALISASI — cek nomor meja (localStorage atau sessionStorage)
+       ---------------------------------------------------------- */
+    (function init() {
+      // Sinkronkan meja dari sessionStorage jika belum ada di localStorage
+      const fromSession = sessionStorage.getItem('urbandine_meja');
+      if (fromSession && !localStorage.getItem(TABLE_KEY)) {
+        localStorage.setItem(TABLE_KEY, fromSession);
+      }
+
+      const saved = getTableNumber();
+      if (saved) {
+        renderOrderPage(saved);
+      }
+      /* Jika belum ada, screen-table sudah tampil secara default */
+    })();
+ 
+    /* ----------------------------------------------------------
+       TOMBOL KONFIRMASI MEJA
+       ---------------------------------------------------------- */
+    document.getElementById('btn-confirm-table').addEventListener('click', function () {
+      const input = document.getElementById('input-table');
+      const error = document.getElementById('table-error');
+      const val   = input.value.trim();
+ 
+      if (!val || isNaN(val) || parseInt(val) < 1 || parseInt(val) > 99) {
+        error.textContent = 'Masukkan nomor meja yang valid (1–99).';
+        input.focus();
+        return;
+      }
+ 
+      error.textContent = '';
+      const tableNo = parseInt(val);
+      setTableNumber(tableNo);
+      renderOrderPage(tableNo);
+    });
+ 
+    /* Enter key di input */
+    document.getElementById('input-table').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('btn-confirm-table').click();
+    });
+ 
+    /* ----------------------------------------------------------
+       TOMBOL GANTI MEJA (di header)
+       ---------------------------------------------------------- */
+    document.getElementById('btn-change-table').addEventListener('click', function () {
+      localStorage.removeItem(TABLE_KEY);
+      localStorage.removeItem(ORDER_KEY);
+ 
+      /* Tampilkan kembali screen meja */
+      document.getElementById('screen-table').style.display = '';
+      document.getElementById('page-order').classList.remove('is-visible');
+      document.getElementById('input-table').value = '';
+      document.getElementById('table-error').textContent = '';
+    });
+ 
+    /* ----------------------------------------------------------
+       TOMBOL PANGGIL PELAYAN — feedback sederhana
+       ---------------------------------------------------------- */
+    document.getElementById('btn-call-waiter').addEventListener('click', function () {
+      const original = this.innerHTML;
+      this.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size:18px;vertical-align:middle">progress_activity</span>';
+      this.disabled  = true;
+ 
+      setTimeout(() => {
+        this.innerHTML = '✓ Dipanggil!';
+        this.style.background = 'var(--color-primary-light)';
+ 
+        setTimeout(() => {
+          this.innerHTML = original;
+          this.style.background = '';
+          this.disabled = false;
+        }, 2500);
+      }, 800);
+    });
+  </script>
+ 
+</body>
+</html>
+ 
+
+
+
+
+
+
