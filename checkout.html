@@ -9,9 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style/styling.css">
-
   <style>
     body { padding-bottom: 120px; }
 
@@ -678,12 +676,13 @@
         const paymentCode = TejaSupabase.paymentToCode(selectedPayment);
 
         // Generate Order ID baru
+        const meja = sessionStorage.getItem('urbandine_meja') || localStorage.getItem('urbandine_table') || '';
+        if (meja) localStorage.setItem('urbandine_table', meja);
         const year    = new Date().getFullYear();
         const rand    = Math.floor(1000 + Math.random() * 9000);
-        const orderId = `UD-${year}-${rand}`;
+        const orderId = `UD-${meja}-${year}-${rand}`;
 
         // Sinkronkan nomor meja dari sessionStorage → localStorage
-        const meja = sessionStorage.getItem('urbandine_meja') || localStorage.getItem('urbandine_table') || '';
         if (meja) localStorage.setItem('urbandine_table', meja);
 
         const createdAt = new Date().toISOString();

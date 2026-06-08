@@ -778,7 +778,7 @@
       let id = localStorage.getItem(ORDER_KEY);
       if (!id) {
         /* Generate: UD-{nomerMeja}-{tahun}-{random 4 digit} */
-        const meja = tableNo || getTableNumber() || '0';
+        const meja = tableNo || getTableNumber() || 0;
         const year = new Date().getFullYear();
         const rand = Math.floor(1000 + Math.random() * 9000);
         id = `UD-${String(meja).padStart(2, '0')}-${year}-${rand}`;
@@ -928,7 +928,7 @@
       // Gunakan total grand dari snapshot jika tersedia, agar konsisten dengan checkout
       const savedTotal = parseInt(localStorage.getItem('urbandine_order_total')) || 0;
       const layanan    = Math.round(total * 0.05);
-      const grandTotal = savedTotal || (total + layanan);
+      const grandTotal = savedTotal || (savedTotal + layanan);
 
       html += `
         <div class="summary-divider"></div>

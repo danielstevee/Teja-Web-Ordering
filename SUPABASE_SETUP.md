@@ -13,6 +13,11 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 5. Ambil `Project URL` dan `anon public key` dari Supabase Dashboard -> Project Settings -> API.
 6. Buka `checkout.html`, buat pesanan pembeli, lalu buka `admin-pesanan.html` untuk melihat order masuk.
 
+Data yang masuk ke Supabase:
+
+- `orders`: data utama pesanan seperti nomor meja, total, metode pembayaran, dan status.
+- `order_items`: detail item checkout seperti nama menu, qty, harga satuan, subtotal, dan urutan item.
+
 Alur status:
 
 - `baru`: pesanan masuk di admin.

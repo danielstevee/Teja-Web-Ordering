@@ -1,17 +1,18 @@
 (function () {
-  const SUPABASE_URL = 'Supabase URL di sini';
-  const SUPABASE_ANON_KEY = 'Supabase Publish Key di sini';
+  const SUPABASE_URL = 'Supabase URL Anda';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
   const STORAGE_KEY = 'teja_orders_cache';
   const CHANNEL_NAME = 'teja-orders';
+  const normalizedUrl = SUPABASE_URL.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
 
   const isConfigured =
-    SUPABASE_URL.startsWith('https://') &&
-    !SUPABASE_URL.includes('Supabase URL di sini') &&
+    normalizedUrl.startsWith('https://') &&
+    !normalizedUrl.includes('YOUR_PROJECT_ID') &&
     SUPABASE_ANON_KEY &&
-    !SUPABASE_ANON_KEY.includes('Supabase Publish Key di sini');
+    !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY');
 
   const client = isConfigured && window.supabase
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(normalizedUrl, SUPABASE_ANON_KEY)
     : null;
 
   function readCache() {
@@ -26,16 +27,27 @@
 
   function normalizeOrder(row) {
     if (!row) return null;
+    const legacyStatus = row.status || '';
+    const orderStatus =
+      row.order_status ||
+      row.orderStatus ||
+      (['diproses', 'siap', 'selesai', 'ditolak'].includes(legacyStatus) ? legacyStatus : 'baru');
+    const payment = row.payment_method || row.payment || 'cash';
+    const payStatus =
+      row.payment_status ||
+      row.payStatus ||
+      (legacyStatus === 'paid' || payment !== 'cash' ? 'paid' : 'pending');
+
     return {
-      id: row.id,
-      meja: row.table_no || row.meja || '',
+      id: row.order_id || row.id,
+      meja: row.table_no || row.table_number || row.meja || '',
       customer: row.customer_name || row.customer || 'Pelanggan',
-      payment: row.payment_method || row.payment || 'cash',
-      payStatus: row.payment_status || row.payStatus || 'pending',
-      orderStatus: row.order_status || row.orderStatus || 'baru',
+      payment,
+      payStatus,
+      orderStatus,
       items: Array.isArray(row.items) ? row.items : [],
       note: row.note || '',
-      total: Number(row.total_amount ?? row.total ?? 0),
+      total: Number(row.total_amount ?? row.total ?? row.amount ?? 0),
       createdAt: row.created_at || row.createdAt || new Date().toISOString(),
       updatedAt: row.updated_at || row.updatedAt || row.created_at || new Date().toISOString()
     };
@@ -44,16 +56,52 @@
   function toRow(order) {
     return {
       id: order.id,
+      order_id: order.id,
       table_no: String(order.meja || order.table_no || ''),
+      table_number: Number(order.meja || order.table_number || 0),
       customer_name: order.customer || order.customer_name || 'Pelanggan',
       payment_method: order.payment || order.payment_method || 'cash',
       payment_status: order.payStatus || order.payment_status || 'pending',
       order_status: order.orderStatus || order.order_status || 'baru',
+      status: order.orderStatus || order.order_status || 'baru',
       items: order.items || [],
       note: order.note || '',
       total_amount: Number(order.total || order.total_amount || 0),
+      total: Number(order.total || order.total_amount || 0),
       updated_at: new Date().toISOString()
     };
+  }
+
+  function toLegacyRow(order) {
+    return {
+      order_id: order.id,
+      table_number: Number(order.meja || 0),
+      total: Number(order.total || 0),
+      payment_method: order.payment || 'cash',
+      status: order.payStatus === 'paid' && order.orderStatus === 'baru'
+        ? 'paid'
+        : (order.orderStatus || 'baru')
+    };
+  }
+
+  function isSchemaError(error) {
+    return ['PGRST204', '42703'].includes(error?.code);
+  }
+
+  function toItemRows(order) {
+    return (order.items || []).map((item, index) => {
+      const qty = Number(item.qty || 0);
+      const unitPrice = Number(item.price ?? item.harga ?? 0);
+      return {
+        order_id: order.id,
+        item_name: item.name || item.nama || '',
+        qty,
+        unit_price: unitPrice,
+        subtotal: qty * unitPrice,
+        image_url: item.img || '',
+        sort_order: index + 1
+      };
+    });
   }
 
   async function listOrders() {
@@ -78,11 +126,21 @@
     if (!id) return null;
     if (!client) return readCache().find(order => order.id === id) || null;
 
-    const { data, error } = await client
+    let { data, error } = await client
       .from('orders')
       .select('*')
-      .eq('id', id)
+      .eq('order_id', id)
       .single();
+
+    if (error && isSchemaError(error)) {
+      const legacyResult = await client
+        .from('orders')
+        .select('*')
+        .eq('id', id)
+        .single();
+      data = legacyResult.data;
+      error = legacyResult.error;
+    }
 
     if (error) {
       console.warn('Supabase getOrder failed, using cache:', error.message);
@@ -101,13 +159,36 @@
 
     if (!client) return normalized;
 
-    const { data, error } = await client
+    let { data, error } = await client
       .from('orders')
       .insert(toRow(normalized))
       .select()
       .single();
 
+    if (error) {
+      const legacyResult = await client
+        .from('orders')
+        .insert(toLegacyRow(normalized))
+        .select()
+        .single();
+      data = legacyResult.data;
+      error = legacyResult.error;
+    }
+
     if (error) throw error;
+
+    const itemRows = toItemRows(normalized);
+    if (itemRows.length) {
+      const { error: itemsError } = await client
+        .from('order_items')
+        .insert(itemRows);
+
+      if (itemsError && !isSchemaError(itemsError)) throw itemsError;
+      if (itemsError) {
+        console.warn('Detail item belum tersimpan. Jalankan supabase-schema.sql untuk menambah kolom order_items:', itemsError.message);
+      }
+    }
+
     const saved = normalizeOrder(data);
     const nextCache = readCache().map(item => item.id === saved.id ? saved : item);
     writeCache(nextCache);
@@ -122,12 +203,23 @@
 
     if (!client) return merged;
 
-    const { data, error } = await client
+    let { data, error } = await client
       .from('orders')
       .update(toRow(merged))
-      .eq('id', id)
+      .eq('order_id', id)
       .select()
       .single();
+
+    if (error) {
+      const legacyResult = await client
+        .from('orders')
+        .update(toLegacyRow(merged))
+        .eq('order_id', id)
+        .select()
+        .single();
+      data = legacyResult.data;
+      error = legacyResult.error;
+    }
 
     if (error) throw error;
     const saved = normalizeOrder(data);
